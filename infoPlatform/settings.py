@@ -9,12 +9,14 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+import os
 from pathlib import Path
+
+import dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+dotenv.load_dotenv(override=True)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -23,7 +25,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-m6yfs*329n2l8tyvxew%p^in&ny!uj#v36e8^2+7n#-fmg02j)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = str(os.environ.get("DEBUG", 0)) == "1"
+LOCAL = str(os.environ.get("LOCAL", 0)) == "1"
 
 ALLOWED_HOSTS = []
 
@@ -37,6 +40,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'infoPlatformMainApp',
+    'apps.mediaProduct',
+    'apps.user',
+    'filebrowser',
+    'ckeditor',
+    'ckeditor_uploader',
+    'mptt',
+    'compressor'
 ]
 
 MIDDLEWARE = [
@@ -54,7 +65,7 @@ ROOT_URLCONF = 'infoPlatform.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -73,12 +84,32 @@ WSGI_APPLICATION = 'infoPlatform.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if LOCAL:
+    DATABASES = {
+        'default': {
+            'CONN_MAX_AGE': None,
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+            # 'NAME': BASE_DIR / 'db.sqlite3',
+            'OPTIONS': {
+                'timeout': 20,
+            }
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.environ.get('MYSQL_DATABASE', 'database'),
+            'USER': os.environ.get('MYSQL_USER', 'root'),
+            'PASSWORD': os.environ.get('MYSQL_PASSWORD', 'password'),
+            'HOST': os.environ.get('MYSQL_HOST', 'localhost'),
+            # 'PORT': os.environ.get('MYSQL_PORT', '3306'),
+            'OPTIONS': {
+                'charset': 'utf8',
+            },
+        }
+    }
 
 
 # Password validation
@@ -103,7 +134,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'uk'
+DEFAULT_CHARSET = 'utf-8'
 
 TIME_ZONE = 'UTC'
 
@@ -115,9 +147,103 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
+FILEBROWSER_VERSIONS = {
+    'product_thumbnail': {'verbose_name': 'Product Thumbnail', 'width': 290, 'height': 350, 'opts': 'crop'},
+    'product_min': {'verbose_name': 'Product Thumbnail', 'width': 350, 'height': 350, 'opts': 'crop'},
+    'admin_thumbnail': {'verbose_name': 'Admin Thumbnail', 'width': 60, 'height': 60, 'opts': 'crop'},
+    'thumbnail': {'verbose_name': 'Thumbnail (1 col)', 'width': 60, 'height': 60, 'opts': 'crop'},
+    'full_hd': {'verbose_name': 'Full HD', 'width': 1920, 'height': 1080, 'opts': 'crop'},
+    '40x40': {'verbose_name': '40x40', 'width': 40, 'height': 40, 'opts': 'crop'},
+    '80x80': {'verbose_name': '80x80', 'width': 80, 'height': 80, 'opts': 'crop'},
+    '100x100': {'verbose_name': '80x80', 'width': 100, 'height': 100, 'opts': 'crop'},
+}
+FILEBROWSER_ADMIN_VERSIONS = ['product_thumbnail', 'thumbnail', 'admin_thumbnail']
+
+FILEBROWSER_EXTENSIONS = {
+    'Image': ['.jpg', '.jpeg', '.gif', '.png', '.tif', '.tiff', '.ico', '.webp'],
+    'Document': ['.pdf', '.doc', '.rtf', '.txt', '.xls', '.csv', '.xml'],
+    'Video': ['.mov', '.wmv', '.mpeg', '.mpg', '.avi', '.rm', '.mp4'],
+    'Audio': ['.mp3', '.wav', '.aiff', '.midi', '.m4p']
+}
+
 STATIC_URL = 'static/'
+
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 100000
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+FILEBROWSER_DIRECTORY = ''
+DIRECTORY = ''
+FILE_UPLOAD_PERMISSIONS = 0o666
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+
+    # Add this
+    'compressor.finders.CompressorFinder',
+)
+
+COMPRESS_ENABLED = True
+COMPRESS_CSS_HASHING_METHOD = 'content'
+COMPRESS_FILTERS = {
+    'css':[
+        'compressor.filters.css_default.CssAbsoluteFilter',
+        'compressor.filters.cssmin.rCSSMinFilter',
+    ],
+    'js':[
+        'compressor.filters.jsmin.JSMinFilter',
+    ]
+}
+HTML_MINIFY = True
+KEEP_COMMENTS_ON_MINIFYING = True
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CKEDITOR_UPLOAD_PATH = "uploads/"
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'Custom',
+        'toolbar_Custom': [
+            {
+                'name': 'document',
+                'items': ['Source', '-', 'Save', 'NewPage', 'Preview', '-', 'Templates']
+            },
+            {
+                'name': 'clipboard',
+                'items': ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo']
+            },
+            {
+                'name': 'editing',
+                'items': ['Find', 'Replace', '-', 'SelectAll']
+            },
+            {
+                'name': 'insert',
+                'items': ['Image', 'Table', 'HorizontalRule', 'SpecialChar', 'PageBreak']
+            },
+            {
+                'name': 'styles',
+                'items': ['Styles', 'Format', 'Font', 'FontSize']
+            },
+            {
+                'name': 'basicstyles',
+                'items': ['Bold', 'Italic', 'Underline', 'Strike', '-', 'RemoveFormat']
+            },
+            {
+                'name': 'paragraph',
+                'items': ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv']
+            },
+            {
+                'name': 'tools',
+                'items': ['Maximize', 'ShowBlocks']
+            },
+        ],
+        'filebrowserUploadUrl': '/ckeditor/upload/',
+        'filebrowserImageUploadUrl': '/ckeditor/upload/',
+    },
+}
