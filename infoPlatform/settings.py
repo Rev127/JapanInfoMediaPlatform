@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'infoPlatformMainApp',
-    'apps.mediaProduct',
+    'apps.mediaProducts',
     'apps.user',
     'filebrowser',
     'ckeditor',
