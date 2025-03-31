@@ -53,14 +53,20 @@ class Publication(models.Model):
 
 class Manga(Publication):
     artist = models.CharField(max_length=50, blank=True, null=True, verbose_name='Художник')
+    work = models.ForeignKey(Work, on_delete=models.CASCADE, related_name='manga_publications')
+
 
 class Novel(Publication):
     illustrator = models.CharField(max_length=50, blank=True, null=True, verbose_name='Ілюстратор')
     publisher = models.CharField(max_length=50, blank=True, null=True, verbose_name='Видавництво')
+    work = models.ForeignKey(Work, on_delete=models.CASCADE, related_name='novel_publications')
+
 
 class Anime(Publication):
     director = models.CharField(max_length=50, blank=True, null=True, verbose_name='Режисер')
     studio = models.CharField(max_length=50, blank=True, null=True, verbose_name='Студія')
+    work = models.ForeignKey(Work, on_delete=models.CASCADE, related_name='anime_publications')
+
 
 class MangaVolumes(models.Model):
     manga = models.ForeignKey('Manga', on_delete=models.CASCADE, related_name='volumes')
