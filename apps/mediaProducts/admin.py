@@ -1,5 +1,5 @@
 from django.contrib import admin
-from  .models import Work, Characters, CharacterWork, Author, Manga, Anime, Novel, Volumes, Seasons, MangaVolumes, NovelVolumes, AnimeSeasons
+from  .models import Work, Characters, CharacterWork, ActiveCharacter, Author, Manga, Anime, Novel, Volumes, Seasons, MangaVolumes, NovelVolumes, AnimeSeasons
 
 # Register your models here.
 @admin.register(Work)
@@ -72,12 +72,18 @@ class NovelAdmin(admin.ModelAdmin):
     ordering = ('title', 'illustrator', 'publisher',)
     inlines = [NovelVolumesInline]
 
+class ActiveCharacterInline(admin.TabularInline):
+    model = ActiveCharacter
+    extra = 0
+    autocomplete_fields = ['character']
+
 @admin.register(Volumes)
 class VolumesAdmin(admin.ModelAdmin):
     list_display = ['title', 'link', 'status']
     search_fields = ['title', 'status']
     list_display_links = ['title', 'link']
     ordering = ('title', 'status',)
+    inlines = [ActiveCharacterInline]
 
 @admin.register(Seasons)
 class SeasonsAdmin(admin.ModelAdmin):
@@ -85,5 +91,6 @@ class SeasonsAdmin(admin.ModelAdmin):
     search_fields = ['title', 'status']
     list_display_links = ['title', 'link']
     ordering = ('title', 'status',)
+    inlines = [ActiveCharacterInline]
 
 

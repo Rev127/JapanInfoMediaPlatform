@@ -39,6 +39,7 @@ class Publication(models.Model):
     title = models.CharField(max_length=255, verbose_name='Назва')
     cover_image = models.ImageField(upload_to='publications/', blank=True, null=True, verbose_name='Обкладинка')
     link = models.CharField(max_length=255, blank=True, null=True, verbose_name='Посилання')
+    work = models.ForeignKey(Work, on_delete=models.CASCADE, related_name='%(class)s_publications')
 
     class Meta:
         abstract = True
@@ -53,19 +54,16 @@ class Publication(models.Model):
 
 class Manga(Publication):
     artist = models.CharField(max_length=50, blank=True, null=True, verbose_name='Художник')
-    work = models.ForeignKey(Work, on_delete=models.CASCADE, related_name='manga_publications')
 
 
 class Novel(Publication):
     illustrator = models.CharField(max_length=50, blank=True, null=True, verbose_name='Ілюстратор')
     publisher = models.CharField(max_length=50, blank=True, null=True, verbose_name='Видавництво')
-    work = models.ForeignKey(Work, on_delete=models.CASCADE, related_name='novel_publications')
 
 
 class Anime(Publication):
     director = models.CharField(max_length=50, blank=True, null=True, verbose_name='Режисер')
     studio = models.CharField(max_length=50, blank=True, null=True, verbose_name='Студія')
-    work = models.ForeignKey(Work, on_delete=models.CASCADE, related_name='anime_publications')
 
 
 class MangaVolumes(models.Model):

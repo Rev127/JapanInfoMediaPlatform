@@ -4,7 +4,7 @@ from apps.user.models import Profile
 
 # Create your models here.
 class BasicNews(models.Model):
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, verbose_name='Користувач')
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE, verbose_name='Користувач')
     content = models.TextField(max_length=255, verbose_name='Контент')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата створення')
 

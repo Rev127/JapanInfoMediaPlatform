@@ -10,6 +10,6 @@ class ProfileAdmin(admin.ModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ['profile', 'publication_unit', 'created_at']
-    search_fields = ['profile', 'publication_unit']
+    list_display = ['user', 'publication_unit', 'created_at']
+    search_fields = ['user', 'publication_unit']
     ordering = ("-created_at",)
