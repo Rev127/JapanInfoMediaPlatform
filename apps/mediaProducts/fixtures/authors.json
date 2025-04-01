@@ -1,0 +1,22 @@
+[
+    {"model": "mediaProducts.author", "pk": 1, "fields": {"name": "Харукі Муракамі", "description": "Японський письменник, майстер магічного реалізму та постмодернізму.", "work_years": 44}},
+    {"model": "mediaProducts.author", "pk": 2, "fields": {"name": "Рюноске Акутагава", "description": "Класик японської літератури, майстер короткого оповідання.", "work_years": 15}},
+    {"model": "mediaProducts.author", "pk": 3, "fields": {"name": "Осаму Дадзай", "description": "Видатний японський письменник, представник екзистенціалізму.", "work_years": 20}},
+    {"model": "mediaProducts.author", "pk": 4, "fields": {"name": "Кадзуа Ісіґуро", "description": "Лауреат Нобелівської премії з літератури 2017 року.", "work_years": 42}},
+    {"model": "mediaProducts.author", "pk": 5, "fields": {"name": "Юкіо Місіма", "description": "Один із найвідоміших японських письменників ХХ століття.", "work_years": 25}},
+    {"model": "mediaProducts.author", "pk": 6, "fields": {"name": "Саяка Мурата", "description": "Сучасна письменниця, відома своїм романом \"Зручний магазин людства\".", "work_years": 20}},
+    {"model": "mediaProducts.author", "pk": 7, "fields": {"name": "Нацуо Кіріно", "description": "Японська письменниця, відома своїми темними трилерами.", "work_years": 30}},
+    {"model": "mediaProducts.author", "pk": 8, "fields": {"name": "Акіра Торіяма", "description": "Творець \"Dragon Ball\" і впливовий манґака.", "work_years": 40}},
+    {"model": "mediaProducts.author", "pk": 9, "fields": {"name": "Кентаро Міура", "description": "Автор \"Berserk\", культової темної фентезійної манґи.", "work_years": 30}},
+    {"model": "mediaProducts.author", "pk": 10, "fields": {"name": "Йосіхіро Тогасі", "description": "Автор \"Yu Yu Hakusho\" та \"Hunter x Hunter\".", "work_years": 35}},
+    {"model": "mediaProducts.author", "pk": 11, "fields": {"name": "Наокі Урасавa", "description": "Автор \"Monster\" та \"20th Century Boys\".", "work_years": 40}},
+    {"model": "mediaProducts.author", "pk": 12, "fields": {"name": "Цугумі Оба", "description": "Автор \"Death Note\" та \"Bakuman\".", "work_years": 20}},
+    {"model": "mediaProducts.author", "pk": 13, "fields": {"name": "Ічіро Ода", "description": "Творець манґи \"One Piece\".", "work_years": 30}},
+    {"model": "mediaProducts.author", "pk": 14, "fields": {"name": "Ген Уробучі", "description": "Сценарист \"Puella Magi Madoka Magica\", \"Fate/Zero\" та \"Psycho-Pass\".", "work_years": 25}},
+    {"model": "mediaProducts.author", "pk": 15, "fields": {"name": "Мінору Фуруя", "description": "Відомий манґака, що працює у жанрі сатири та комедії.", "work_years": 25}},
+    {"model": "mediaProducts.author", "pk": 16, "fields": {"name": "Котаро Іссака", "description": "Японський письменник, автор \"Bullet Train\".", "work_years": 22}},
+    {"model": "mediaProducts.author", "pk": 17, "fields": {"name": "Дзіро Танігучі", "description": "Манґака, що поєднує європейський стиль і японську традицію.", "work_years": 45}},
+    {"model": "mediaProducts.author", "pk": 18, "fields": {"name": "Сатосі Кон", "description": "Режисер аніме \"Perfect Blue\", \"Paprika\", \"Tokyo Godfathers\".", "work_years": 20}},
+    {"model": "mediaProducts.author", "pk": 19, "fields": {"name": "Кейсуке Іто", "description": "Манґака, що працює у жанрах наукової фантастики та жахів.", "work_years": 15}},
+    {"model": "mediaProducts.author", "pk": 20, "fields": {"name": "Джунджі Іто", "description": "Майстер жахів у японській манзі, автор \"Uzumaki\".", "work_years": 30}}
+]
