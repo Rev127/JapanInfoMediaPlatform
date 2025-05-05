@@ -1,5 +1,5 @@
 from django.contrib import admin
-from  .models import Work, Characters, CharacterWork, ActiveCharacter, Author, Manga, Anime, Novel, Volumes, Seasons, MangaVolumes, NovelVolumes, AnimeSeasons
+from  .models import Work, Characters, CharacterPublication, Author, Manga, Anime, Novel, Volumes, Seasons
 
 # Register your models here.
 @admin.register(Work)
@@ -10,21 +10,21 @@ class WorkAdmin(admin.ModelAdmin):
     autocomplete_fields = ['author']
     list_filter = ['genre']
     filter_horizontal = ['genre']
-    ordering = ('title', 'genre',)
+    ordering = ('title',)
 
 @admin.register(Characters)
 class CharactersAdmin(admin.ModelAdmin):
-    list_display = ['name', 'link']
+    list_display = ['name']
     search_fields = ['name']
-    list_display_links = ['name', 'link']
+    list_display_links = ['name']
     ordering = ('name',)
 
-@admin.register(CharacterWork)
-class CharacterWorkAdmin(admin.ModelAdmin):
-    list_display = ['character', 'work']
-    search_fields = ['character', 'work']
-    list_display_links = ['character', 'work']
-    autocomplete_fields = ['character', 'work']
+@admin.register(CharacterPublication)
+class CharacterPublicationAdmin(admin.ModelAdmin):
+    list_display = ['character', 'publication_type']
+    search_fields = ['character']
+    list_display_links = ['character']
+    autocomplete_fields = ['character']
 
 @admin.register(Author)
 class AuthorAdmin(admin.ModelAdmin):
@@ -33,49 +33,26 @@ class AuthorAdmin(admin.ModelAdmin):
     list_display_links = ['name']
     ordering = ('name',)
 
-class MangaVolumesInline(admin.TabularInline):
-    model = MangaVolumes
-    extra = 0
-    autocomplete_fields = ['publication_unit']
-
 @admin.register(Manga)
 class MangaAdmin(admin.ModelAdmin):
-    list_display = ['title', 'link', 'artist']
-    search_fields = ['title', 'artist']
+    list_display = ['title', 'link', 'artist', 'publisher', 'work']
+    search_fields = ['title', 'artist', 'publisher', 'work']
     list_display_links = ['title', 'link']
-    ordering = ('title', 'artist',)
-    inlines = [MangaVolumesInline]
-
-class AnimeSeasonsInline(admin.TabularInline):
-    model = AnimeSeasons
-    extra = 0
-    autocomplete_fields = ['publication_unit']
+    ordering = ('title', 'artist', 'publisher', 'work',)
 
 @admin.register(Anime)
 class AnimeAdmin(admin.ModelAdmin):
-    list_display = ['title', 'link', 'director', 'studio']
-    search_fields = ['title']
+    list_display = ['title', 'link', 'director', 'studio', 'work']
+    search_fields = ['title', 'director', 'studio', 'work']
     list_display_links = ['title', 'link']
-    ordering = ('title', 'director', 'studio',)
-    inlines = [AnimeSeasonsInline]
-
-class NovelVolumesInline(admin.TabularInline):
-    model = NovelVolumes
-    extra = 0
-    autocomplete_fields = ['publication_unit']
+    ordering = ('title', 'director', 'studio', 'work',)
 
 @admin.register(Novel)
 class NovelAdmin(admin.ModelAdmin):
-    list_display = ['title', 'link', 'illustrator', 'publisher']
-    search_fields = ['title', 'illustrator', 'publisher']
+    list_display = ['title', 'link', 'illustrator', 'publisher', 'work']
+    search_fields = ['title', 'illustrator', 'publisher', 'work']
     list_display_links = ['title', 'link']
-    ordering = ('title', 'illustrator', 'publisher',)
-    inlines = [NovelVolumesInline]
-
-class ActiveCharacterInline(admin.TabularInline):
-    model = ActiveCharacter
-    extra = 0
-    autocomplete_fields = ['character']
+    ordering = ('title', 'illustrator', 'publisher', 'work',)
 
 @admin.register(Volumes)
 class VolumesAdmin(admin.ModelAdmin):
@@ -83,7 +60,6 @@ class VolumesAdmin(admin.ModelAdmin):
     search_fields = ['title', 'status']
     list_display_links = ['title', 'link']
     ordering = ('title', 'status',)
-    inlines = [ActiveCharacterInline]
 
 @admin.register(Seasons)
 class SeasonsAdmin(admin.ModelAdmin):
@@ -91,6 +67,5 @@ class SeasonsAdmin(admin.ModelAdmin):
     search_fields = ['title', 'status']
     list_display_links = ['title', 'link']
     ordering = ('title', 'status',)
-    inlines = [ActiveCharacterInline]
 
 

@@ -11,6 +11,15 @@ class BasicNews(models.Model):
     def __str__(self):
         return self.title
 
+    def get_user(self):
+        return self.user
+
+    def get_content(self):
+        return self.content
+
+    def get_created_at(self):
+        return self.created_at
+
     class Meta:
         abstract = True
 
@@ -22,6 +31,9 @@ class ServerNews(BasicNews):
         Update = 'Update', 'Оновлення'
 
     news_type = models.CharField(max_length=20, choices=NewsType.choices, default=NewsType.INFO, verbose_name='Тип новини')
+
+    def get_news_type(self):
+        return self.news_type
 
 class WorkNews(BasicNews):
     image = models.ImageField(upload_to='news/', blank=True, null=True, verbose_name='Зображення')
@@ -35,3 +47,10 @@ class WorkNews(BasicNews):
         if not self.link:
             self.link = slugify(self.title, to_lower=True)
         super().save(*args, **kwargs)
+
+    def get_image(self):
+        return self.image.url if self.image else None
+
+    def get_title(self):
+        return self.title
+
