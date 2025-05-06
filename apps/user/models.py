@@ -3,7 +3,7 @@ from apps.mediaProducts.models import PublicationUnit, Work
 from django.contrib.auth.models import AbstractUser, Group, Permission
 
 # Create your models here.
-class Profile(AbstractUser):  # Це буде єдина модель користувача
+class Profile(AbstractUser):
     avatar = models.ImageField(upload_to='users/', blank=True, null=True, verbose_name='Аватар')
 
     groups = models.ManyToManyField(Group, related_name="user_profiles", blank=True, verbose_name='Групи')
@@ -35,5 +35,5 @@ class Comment(models.Model):
     def get_content(self):
         return self.content
 
-    def get_ctreated_at(self):
+    def get_created_at(self):
         return self.created_at

@@ -1,7 +1,7 @@
 from ckeditor.fields import RichTextField
 from django.db import models
 from slugify import slugify
-
+from django.core.exceptions import ValidationError
 
 # Create your models here.
 
@@ -88,6 +88,9 @@ class Publication(models.Model):
     def get_publication_unit(self):
         return self.publication_unit.all()
 
+    def get_work(self):
+        return self.work
+
     def save(self, *args, **kwargs):
         if not self.link:
             self.link = slugify(self.title, to_lower=True)
@@ -97,6 +100,24 @@ class Publication(models.Model):
 class Manga(Publication):
     artist = models.CharField(max_length=50, blank=True, null=True, verbose_name='Художник')
     publisher = models.CharField(max_length=50, blank=True, null=True, verbose_name='Видавництво')
+
+    def clean(self):
+        super().clean()
+        # Перевірка, чи всі одиниці публікації є томами (Volumes)
+        for unit in self.publication_unit.all():
+            if not isinstance(unit, Volumes):
+                raise ValidationError(f"Publication unit '{unit}' is not a volume and cannot be linked to Manga.")
+            # Перевірка, чи одиниця публікації вже прив'язана до іншої публікації
+            if Manga.objects.filter(publication_unit=unit).exclude(id=self.id).exists():
+                raise ValidationError(f"Publication unit '{unit}' is already linked to another Manga.")
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.clean()
+
+        # Якщо є зв'язки Many-to-Many, додаємо їх після збереження
+        for unit in self.publication_unit.all():
+            self.publication_unit.add(unit)
 
     def get_artist(self):
         return self.artist
@@ -108,6 +129,24 @@ class Novel(Publication):
     illustrator = models.CharField(max_length=50, blank=True, null=True, verbose_name='Ілюстратор')
     publisher = models.CharField(max_length=50, blank=True, null=True, verbose_name='Видавництво')
 
+    def clean(self):
+        super().clean()
+        # Перевірка, чи всі одиниці публікації є томами (Volumes)
+        for unit in self.publication_unit.all():
+            if not isinstance(unit, Volumes):
+                raise ValidationError(f"Publication unit '{unit}' is not a volume and cannot be linked to Novel.")
+            # Перевірка, чи одиниця публікації вже прив'язана до іншої публікації
+            if Novel.objects.filter(publication_unit=unit).exclude(id=self.id).exists():
+                raise ValidationError(f"Publication unit '{unit}' is already linked to another Novel.")
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.clean()
+
+        # Якщо є зв'язки Many-to-Many, додаємо їх після збереження
+        for unit in self.publication_unit.all():
+            self.publication_unit.add(unit)
+
     def get_illustrator(self):
         return self.illustrator
 
@@ -117,6 +156,24 @@ class Novel(Publication):
 class Anime(Publication):
     director = models.CharField(max_length=50, blank=True, null=True, verbose_name='Режисер')
     studio = models.CharField(max_length=50, blank=True, null=True, verbose_name='Студія')
+
+    def clean(self):
+        super().clean()
+        # Перевірка, чи всі одиниці публікації є сезонами (Seasons)
+        for unit in self.publication_unit.all():
+            if not isinstance(unit, Seasons):
+                raise ValidationError(f"Publication unit '{unit}' is not a season and cannot be linked to Anime.")
+            # Перевірка, чи одиниця публікації вже прив'язана до іншої публікації
+            if Anime.objects.filter(publication_unit=unit).exclude(id=self.id).exists():
+                raise ValidationError(f"Publication unit '{unit}' is already linked to another Anime.")
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.clean()
+
+        # Якщо є зв'язки Many-to-Many, додаємо їх після збереження
+        for unit in self.publication_unit.all():
+            self.publication_unit.add(unit)
 
     def get_director(self):
         return self.director
@@ -132,6 +189,7 @@ class PublicationUnit(models.Model):
     year_of_release = models.PositiveIntegerField(default=0, blank=True, null=True, verbose_name='Рік випуску')
     number = models.PositiveIntegerField(default=0, blank=True, null=True, verbose_name='Номер')
     active_characters = models.ManyToManyField('Characters', related_name='active_characters', verbose_name='Активні персонажі')
+    last_update = models.DateTimeField(auto_now=True, verbose_name='Останнє оновлення')
 
     class Status(models.TextChoices):
         ONGOING = 'ongoing', 'Ongoing'
@@ -166,6 +224,11 @@ class PublicationUnit(models.Model):
     def get_status(self):
         return self.status
 
+    def get_publication(self):
+        return self.publication
+
+    def get_last_update(self):
+        return self.last_update
 
     def save(self, *args, **kwargs):
         if not self.link:
@@ -195,7 +258,25 @@ class Characters(models.Model):
     image = models.ImageField(upload_to='characters/', blank=True, null=True, verbose_name='Зображення')
 
     def __str__(self):
-        return self.get_name()
+        # Отримуємо всі PublicationUnit, де цей персонаж є активним
+        publication_units = self.active_characters.all()
+
+        # Збираємо унікальні назви робіт
+        work_titles = set()
+        for pub_unit in publication_units:
+            if hasattr(pub_unit, 'manga_publications'):
+                for manga in pub_unit.manga_publications.all():
+                    work_titles.add(manga.work.title)
+            if hasattr(pub_unit, 'novel_publications'):
+                for novel in pub_unit.novel_publications.all():
+                    work_titles.add(novel.work.title)
+            if hasattr(pub_unit, 'anime_publications'):
+                for anime in pub_unit.anime_publications.all():
+                    work_titles.add(anime.work.title)
+
+        if work_titles:
+            return f"{self.name} ({', '.join(work_titles)})"
+        return self.name
 
     def get_name(self):
         return self.name
@@ -206,9 +287,8 @@ class Characters(models.Model):
     def get_character_publications(self):
         return self.character_publications.all()
 
-
 class CharacterPublication(models.Model):
-    character = models.ForeignKey('Characters', on_delete=models.CASCADE, related_name='works')
+    character = models.ForeignKey('Characters', on_delete=models.CASCADE, related_name='character_publications')
     description = RichTextField(blank=True, null=True, verbose_name='Опис')
 
     class PublicationType(models.TextChoices):
@@ -218,8 +298,26 @@ class CharacterPublication(models.Model):
 
     publication_type = models.CharField(max_length=50, choices=PublicationType.choices, verbose_name='Тип роботи')
 
+    def clean(self):
+        # Перевірка, чи вже існує CharacterPublication з таким типом для цього персонажа
+        if CharacterPublication.objects.filter(character=self.character, publication_type=self.publication_type).exists():
+            raise ValidationError(f"CharacterPublication with type '{self.publication_type}' already exists for this character.")
+
+    def save(self, *args, **kwargs):
+        # Виклик clean перед збереженням
+        self.clean()
+        super().save(*args, **kwargs)
+
     def get_description(self):
         return self.description
 
-    def get_work_type(self):
-        return self.work_type
+    def get_publication_type(self):
+        return self.publication_type
+
+    def get_character(self):
+        return self.character
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['character', 'publication_type'], name='unique_character_publication_type')
+        ]
