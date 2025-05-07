@@ -125,7 +125,7 @@ if 'test' in sys.argv:
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
-AUTH_USER_MODEL = 'user.Profile'
+AUTH_USER_MODEL = 'apps.user.Profile'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
