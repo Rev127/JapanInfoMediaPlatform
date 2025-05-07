@@ -1,0 +1,41 @@
+{% extends 'wrapper.html' %}
+{% load static %}
+{% block head_custom_styles %}
+<link rel="stylesheet" href="{% static 'mediaProducts/scss/work_style.scss' %}" type="text/x-scss">
+{% endblock %}
+{% block body %}
+
+
+<div class="container">
+    <div class="publicationunit-header">
+        <!-- Publication Image -->
+        <div class="publicationunit-image">
+            <p>Image not available</p>
+        </div>
+
+        <!-- Publication Info -->
+        <div class="publicationunit-info">
+            <h1>Publication unit name</h1>
+            <div>
+                <p>year of release</p>
+            </div>
+            <div>
+                <p>chapter/episode count</p>
+            </div>
+        </div>
+    </div>
+    <h2>Опис:</h2>
+    <div class="description">
+        <p>description</p>
+    </div>
+</div>
+
+<div class="container">
+    <h1>Активні персонажі</h1>
+    <!-- Character Section -->
+    <section>
+
+    </section>
+</div>
+
+{% endblock %}

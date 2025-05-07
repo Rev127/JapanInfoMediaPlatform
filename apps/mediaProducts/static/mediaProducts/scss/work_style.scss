@@ -1,0 +1,41 @@
+.publication-header, .publicationunit-header{
+    display: flex;
+    gap: 20px;
+}
+
+.publication-image, .publicationunit-image{
+    width: 300px;
+    height: 400px;
+    background-color: #ccc;
+}
+
+.publication-info, .publicationunit-info{
+    flex: 1;
+}
+
+.genres {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 10px 0;
+
+    .genre {
+        background-color: #233833;
+        padding: 5px 10px;
+        border-radius: 5px;
+    }
+}
+
+.description {
+    background-color: #233833;
+    padding: 20px;
+    border-radius: 20px;
+    margin-top: 20px;
+
+    p {
+        margin: 0;
+    }
+}
+
+
+
