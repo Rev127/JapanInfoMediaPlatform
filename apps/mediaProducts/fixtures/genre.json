@@ -1,0 +1,22 @@
+[
+    {"model": "mediaProducts.genre", "pk": 1, "fields": {"name": "Фентезі", "description": "Жанр з елементами магії та надприродного."}},
+    {"model": "mediaProducts.genre", "pk": 2, "fields": {"name": "Наукова фантастика", "description": "Майбутні технології та наукові відкриття."}},
+    {"model": "mediaProducts.genre", "pk": 3, "fields": {"name": "Романтика", "description": "Сюжети, що обертаються навколо любовних стосунків."}},
+    {"model": "mediaProducts.genre", "pk": 4, "fields": {"name": "Детектив", "description": "Розслідування злочинів і пошук винного."}},
+    {"model": "mediaProducts.genre", "pk": 5, "fields": {"name": "Жахи", "description": "Страхітливі історії, що викликають страх і напругу."}},
+    {"model": "mediaProducts.genre", "pk": 6, "fields": {"name": "Комедія", "description": "Гумористичні твори для підняття настрою."}},
+    {"model": "mediaProducts.genre", "pk": 7, "fields": {"name": "Драма", "description": "Глибокі емоційні конфлікти та серйозні теми."}},
+    {"model": "mediaProducts.genre", "pk": 8, "fields": {"name": "Трилер", "description": "Напружені історії з несподіваними поворотами."}},
+    {"model": "mediaProducts.genre", "pk": 9, "fields": {"name": "Бойовик", "description": "Динамічні сюжети з екшен-сценами."}},
+    {"model": "mediaProducts.genre", "pk": 10, "fields": {"name": "Історичний", "description": "Події, що базуються на реальній історії."}},
+    {"model": "mediaProducts.genre", "pk": 11, "fields": {"name": "Психологія", "description": "Твори, що досліджують людську психіку."}},
+    {"model": "mediaProducts.genre", "pk": 12, "fields": {"name": "Спорт", "description": "Історії про спортсменів і змагання."}},
+    {"model": "mediaProducts.genre", "pk": 13, "fields": {"name": "Музака", "description": "Твори, пов'язані з музичною тематикою."}},
+    {"model": "mediaProducts.genre", "pk": 14, "fields": {"name": "Містика", "description": "Таємничі та загадкові події."}},
+    {"model": "mediaProducts.genre", "pk": 15, "fields": {"name": "Пригоди", "description": "Захопливі подорожі та випробування."}},
+    {"model": "mediaProducts.genre", "pk": 16, "fields": {"name": "Махо Шьоджьо", "description": "Жанр про чарівних дівчат."}},
+    {"model": "mediaProducts.genre", "pk": 17, "fields": {"name": "Меха", "description": "Твори про роботів і бойові машини."}},
+    {"model": "mediaProducts.genre", "pk": 18, "fields": {"name": "Школа", "description": "Події, що відбуваються у школі."}},
+    {"model": "mediaProducts.genre", "pk": 19, "fields": {"name": "Ісекай", "description": "Герої, що потрапляють у паралельний світ."}},
+    {"model": "mediaProducts.genre", "pk": 20, "fields": {"name": "Кіберпанк", "description": "Світ високих технологій і деградації суспільства."}}
+]
