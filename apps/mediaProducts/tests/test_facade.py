@@ -1,9 +1,3 @@
-import django
-import os
-
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "infoPlatform.settings")
-django.setup()
-
 from django.test import TestCase
 from apps.mediaProducts.facade import MediaProductsViewer
 from apps.mediaProducts.models import Work, Author, Manga, Anime, Novel, Volumes

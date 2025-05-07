@@ -8,9 +8,6 @@ class BasicNews(models.Model):
     content = models.TextField(max_length=255, verbose_name='Контент')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата створення')
 
-    def __str__(self):
-        return self.title
-
     def get_user(self):
         return self.user
 

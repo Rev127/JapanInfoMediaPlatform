@@ -1,9 +1,3 @@
-import django
-import os
-
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "infoPlatform.settings")
-django.setup()
-
 from django.test import TestCase
 from apps.user.facade import UserViewer
 from apps.user.models import Profile, Comment
