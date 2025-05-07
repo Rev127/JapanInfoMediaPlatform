@@ -1,0 +1,20 @@
+    <div class="jim-platform">JIMP</div>
+    <div class="search-bar">
+        <form method="get">
+            <input
+                    type="text"
+                    name="q"
+                    placeholder="Search"
+                    class="search-input"
+                    value="{{ query|default:'' }}">  <!-- Виводимо поточний запит -->
+            <button type="submit" class="search-button">Search</button>
+        </form>
+    </div>
+    <div class="auth">
+        <button class="button default" onclick="window.location.href=''">
+            <span class="text">Sign in</span>
+        </button>
+    </div>
+
+
+
