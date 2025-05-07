@@ -22,7 +22,7 @@ class Profile(AbstractUser):
 
 class Comment(models.Model):
     user = models.ForeignKey(Profile, on_delete=models.CASCADE, verbose_name='Користувач')
-    publication_unit = models.ForeignKey(PublicationUnit, on_delete=models.CASCADE, verbose_name='Публікаціqна одиниця')
+    publication_unit = models.ForeignKey(PublicationUnit, on_delete=models.CASCADE, verbose_name='Публікаційна одиниця')
     content = models.TextField(max_length=255, verbose_name='Коментар')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата створення')
 
