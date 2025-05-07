@@ -103,6 +103,9 @@ class Manga(Publication):
 
     def clean(self):
         super().clean()
+
+        if not self.pk:
+            return
         # Перевірка, чи всі одиниці публікації є томами (Volumes)
         for unit in self.publication_unit.all():
             if not isinstance(unit, Volumes):
@@ -112,12 +115,8 @@ class Manga(Publication):
                 raise ValidationError(f"Publication unit '{unit}' is already linked to another Manga.")
 
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
         self.clean()
-
-        # Якщо є зв'язки Many-to-Many, додаємо їх після збереження
-        for unit in self.publication_unit.all():
-            self.publication_unit.add(unit)
+        super().save(*args, **kwargs)
 
     def get_artist(self):
         return self.artist
@@ -131,6 +130,9 @@ class Novel(Publication):
 
     def clean(self):
         super().clean()
+
+        if not self.pk:
+            return
         # Перевірка, чи всі одиниці публікації є томами (Volumes)
         for unit in self.publication_unit.all():
             if not isinstance(unit, Volumes):
@@ -140,12 +142,8 @@ class Novel(Publication):
                 raise ValidationError(f"Publication unit '{unit}' is already linked to another Novel.")
 
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
         self.clean()
-
-        # Якщо є зв'язки Many-to-Many, додаємо їх після збереження
-        for unit in self.publication_unit.all():
-            self.publication_unit.add(unit)
+        super().save(*args, **kwargs)
 
     def get_illustrator(self):
         return self.illustrator
@@ -159,6 +157,9 @@ class Anime(Publication):
 
     def clean(self):
         super().clean()
+
+        if not self.pk:
+            return
         # Перевірка, чи всі одиниці публікації є сезонами (Seasons)
         for unit in self.publication_unit.all():
             if not isinstance(unit, Seasons):
@@ -168,12 +169,8 @@ class Anime(Publication):
                 raise ValidationError(f"Publication unit '{unit}' is already linked to another Anime.")
 
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
         self.clean()
-
-        # Якщо є зв'язки Many-to-Many, додаємо їх після збереження
-        for unit in self.publication_unit.all():
-            self.publication_unit.add(unit)
+        super().save(*args, **kwargs)
 
     def get_director(self):
         return self.director

@@ -21,8 +21,8 @@ class WorkAdmin(admin.ModelAdmin):
 class CharacterPublicationInline(admin.TabularInline):
     model = CharacterPublication
     extra = 0
-    verbose_name = 'Опис песонажа в залежності від публікації'
-    verbose_name_plural = 'Опис песонажа'
+    verbose_name = 'Опис персонажа в залежності від публікації'
+    verbose_name_plural = 'Опис персонажа'
 
     def save_new(self, form, commit=True):
         # Отримуємо дані з форми
@@ -87,9 +87,6 @@ class AnimeAdmin(admin.ModelAdmin):
     list_filter = ['publication_unit']
     filter_horizontal = ['publication_unit']
     ordering = ('title', 'director', 'studio', 'work',)
-
-    # Аналогічно для ManyToManyField:
-    from django.db.models import Q
 
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         if db_field.name == "publication_unit":
