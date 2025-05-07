@@ -224,8 +224,7 @@ class PublicationUnit(models.Model):
     def get_status(self):
         return self.status
 
-    def get_publication(self):
-        return self.publication
+# Removed the get_publication method as it references an undefined attribute.
 
     def get_last_update(self):
         return self.last_update
