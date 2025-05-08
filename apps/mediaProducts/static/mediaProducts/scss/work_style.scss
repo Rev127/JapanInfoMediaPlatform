@@ -1,16 +1,16 @@
-.publication-header, .publicationunit-header{
+.work-header, .publication-header, .publicationunit-header{
     display: flex;
     gap: 20px;
-}
 
-.publication-image, .publicationunit-image{
-    width: 300px;
-    height: 400px;
-    background-color: #ccc;
-}
+    .work-image, .publication-image, .publicationunit-image{
+        width: 300px;
+        height: 400px;
+        background-color: #ccc;
+    }
 
-.publication-info, .publicationunit-info{
-    flex: 1;
+    .work-info, .publication-info, .publicationunit-info{
+        flex: 1;
+    }
 }
 
 .genres {
@@ -36,6 +36,51 @@
         margin: 0;
     }
 }
+
+.comment {
+    background-color: #233833;
+    padding: 20px;
+    border-radius: 20px;
+    margin-top: 10px;
+    color: #D1FAE5;
+    width: 100%; // або max-width: 800px;
+    box-sizing: border-box;
+
+    .comment-header {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+    }
+
+    .comment-image {
+        width: 30px;
+        height: 30px;
+        background-color: #ccc;
+        border-radius: 50%;
+    }
+
+    .comment-date {
+        font-size: 12px;
+        color: #A0AEC0;
+    }
+
+    .comment-body {
+        background-color: #1B2B27;
+        border-radius: 5px;
+        padding: 10px;
+        margin-top: 10px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+
+    p {
+        margin: 0;
+    }
+}
+
+
+
 
 
 
