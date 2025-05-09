@@ -26,8 +26,11 @@
     }
 }
 
-.description {
+
+
+.description, .author {
     background-color: #233833;
+
     padding: 20px;
     border-radius: 20px;
     margin-top: 20px;
@@ -37,47 +40,55 @@
     }
 }
 
-.comment {
-    background-color: #233833;
-    padding: 20px;
-    border-radius: 20px;
-    margin-top: 10px;
-    color: #D1FAE5;
-    width: 100%; // або max-width: 800px;
-    box-sizing: border-box;
+.comments {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 
-    .comment-header {
-        display: flex;
-        gap: 20px;
-        align-items: center;
-    }
-
-    .comment-image {
-        width: 30px;
-        height: 30px;
-        background-color: #ccc;
-        border-radius: 50%;
-    }
-
-    .comment-date {
-        font-size: 12px;
-        color: #A0AEC0;
-    }
-
-    .comment-body {
-        background-color: #1B2B27;
-        border-radius: 5px;
-        padding: 10px;
+    .comment {
+        background-color: #233833;
+        padding: 20px;
+        border-radius: 20px;
         margin-top: 10px;
-        width: 100%;
+        color: #D1FAE5;
+        width: 100%; // або max-width: 800px;
         box-sizing: border-box;
-    }
+
+        .comment-header {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .comment-image {
+            width: 30px;
+            height: 30px;
+            background-color: #ccc;
+            border-radius: 50%;
+        }
+
+        .comment-date {
+            font-size: 12px;
+            color: #A0AEC0;
+        }
+
+        .comment-body {
+            background-color: #1B2B27;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
 
 
-    p {
-        margin: 0;
+        p {
+            margin: 0;
+        }
     }
 }
+
+
 
 
 

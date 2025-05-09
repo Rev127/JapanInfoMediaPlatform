@@ -122,7 +122,7 @@ html, body {
         padding-left: 150px;
         padding-right: 150px;
     }
-    }
+  }
 
     h1 {
       font-family: 'Konkhmer Sleokchher', sans-serif;
@@ -138,19 +138,113 @@ html, body {
       align-items: center;
     }
 
-
-
     section {
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       align-items: center;
-      justify-content: center;
+      justify-content: space-between;
       padding: 20px;
       background-color: #233833; /* Фон для секцій */
       border-radius: 10px; /* Заокруглені краї */
       margin-bottom: 20px; /* Відступ між секціями */
     }
+
+    .cards {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+
+        .card {
+            width: 150px; /* Визначення фіксованої ширини картки */
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+
+            .thumbnail {
+                width: 100%;
+                height: 200px;
+                background-color: #d3d3d3;
+                border-radius: 4px;
+                overflow: hidden;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .placeholder {
+                color: #777;
+                font-size: 14px;
+            }
+
+            .title-wrapper {
+                display: block;
+                width: 100%;
+                overflow: hidden; /* Обрізає текст, якщо він виходить за межі */
+                text-overflow: ellipsis; /* Додає три крапки (...) */
+                white-space: nowrap; /* Запобігає переносу тексту */
+
+                .title {
+                    font-size: 16px;
+                    color: white;
+                    display: inline-block;
+                    max-width: 100%; /* Забезпечує, щоб текст не виходив за межі */
+
+                    a {
+                        color: inherit;
+                        text-decoration: none;
+                    }
+                }
+            }
+        }
+    }
+
+
+    .server-news{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 20px;
+
+        .news-item {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+          align-items: flex-start;
+          margin-bottom: 20px;
+          width: 100%;
+          padding: 10px;
+          background-color: #2E534A; /* Фон для новин */
+          border-radius: 20px; /* Заокруглені краї */
+
+          span {
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              max-width: 100%;
+              color: #D1FAE5;
+
+              &::after {
+                content: '|';
+                margin-left: 10px;
+                color: #fff;
+              }
+
+              &:last-child::after {
+                content: '';
+                margin-left: 0;
+              }
+
+              &.content {
+                white-space: normal;
+                flex: 1;
+              }
+            }
+        }
+    }
 }
+
+
 
 .footer {
   display: block;
