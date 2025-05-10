@@ -1,0 +1,72 @@
+body {
+    font-family: 'Konkhmer Sleokchher', sans-serif;
+    background-color: #1B2B27;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    min-height: 100vh;
+    justify-content: center; /* Центрування по горизонталі */
+    align-items: center;    /* Центрування по вертикалі */
+}
+
+main {
+    flex-grow: 1;
+}
+
+.main_block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #233833;
+    border-radius: 25px;
+    color: #D1FAE5;
+}
+
+input[type="username"], input[type="password"], input[type="email"] {
+    padding: 12px;
+    margin: 8px 0;
+    border: 2px solid #333;
+    border-radius: 25px;
+    box-sizing: border-box;
+    font-size: 16px;
+    background-color: #34D399;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    color: #233833;
+}
+
+button {
+    margin-top: 10px;
+    padding: 12px 40px;
+    background-color: #34D399;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-family: 'Konkhmer Sleokchher', sans-serif;
+    font-size: 16px;
+    color: #233833;
+}
+
+button:hover {
+    background-color: #473D3D;
+    color: white;
+}
+
+a {
+    color: #1A4314;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.errorlist {
+    color: red;
+}

@@ -1,0 +1,47 @@
+{% extends 'wrapper.html' %}
+{% load static %}
+{% block head_custom_styles %}
+<link rel="stylesheet" href="{% static 'mediaProducts/scss/work_style.scss' %}" type="text/x-scss">
+{% endblock %}
+{% block body %}
+
+
+<div class="container">
+    <div class="publication-header">
+        <!-- Publication Image -->
+        <div class="publication-image">
+            <p>Image not available</p>
+        </div>
+
+        <!-- Publication Info -->
+        <div class="publication-info">
+            <h1>Publication name</h1>
+            <div>
+                <p>artist/illustrator/director</p>
+            </div>
+            <div>
+                <p>publisher/studio</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <h1>Томи/Сезони</h1>
+    <!-- Volumes/Seasons Section -->
+    <section>
+        <div class="cards">
+            <div class="card">
+                <div class="thumbnail">
+                    <img src="" alt="" style="width: 100%; height: 100%;">
+                    <div class="placeholder">No Image</div>
+                </div>
+                <div class="title-wrapper">
+                    <p class="title"><a href="">Volume №_</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+{% endblock %}
