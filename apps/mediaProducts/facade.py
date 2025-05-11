@@ -1,12 +1,12 @@
-from .models import Work, Manga, Anime, Novel
+from .models import Work, Manga, Anime, Novel, Publication, Volumes, Seasons
 from django.db.models import Max
 
 class MediaProductsViewer:
     @staticmethod
-    def get_work_info(work_id):
+    def get_work_info(link):
         """Повертає інформацію про твір за ID"""
         try:
-            return Work.objects.prefetch_related('genre').select_related('author').get(id=work_id)
+            return Work.objects.prefetch_related('genre').select_related('author').get(link=link)
         except Work.DoesNotExist:
             return None
 
@@ -25,12 +25,12 @@ class MediaProductsViewer:
             return None
 
     @staticmethod
-    def get_publications_by_work(work_id):
+    def get_publications_by_work(link):
         """Повертає публікації, пов'язані з твором"""
         try:
-            manga = Manga.objects.filter(work_id=work_id)
-            anime = Anime.objects.filter(work_id=work_id)
-            novel = Novel.objects.filter(work_id=work_id)
+            manga = Manga.objects.filter(work__link=link)
+            anime = Anime.objects.filter(work__link=link)
+            novel = Novel.objects.filter(work__link=link)
             return {
                 'manga': manga,
                 'anime': anime,
@@ -40,19 +40,19 @@ class MediaProductsViewer:
             return None
 
     @staticmethod
-    def get_publication_by_type(publication_type, work_id):
-        """Повертає публікації за типом"""
-        try:
-            if publication_type == 'manga':
-                return Manga.objects.filter(work_id=work_id)
-            elif publication_type == 'anime':
-                return Anime.objects.filter(work_id=work_id)
-            elif publication_type == 'novel':
-                return Novel.objects.filter(work_id=work_id)
-            else:
-                return None
-        except Work.DoesNotExist:
-            return None
+    def get_publication_by_type(publication_type, link):
+       """Повертає публікацію за типом"""
+       try:
+           if publication_type == 'manga':
+               return Manga.objects.filter(link=link).first()
+           elif publication_type == 'anime':
+               return Anime.objects.filter(link=link).first()
+           elif publication_type == 'novel':
+               return Novel.objects.filter(link=link).first()
+           else:
+               return None
+       except Exception:
+           return None
 
     @staticmethod
     def get_publication_units_by_publication(publication):
@@ -60,4 +60,17 @@ class MediaProductsViewer:
         try:
             return publication.publication_unit.all()
         except Exception as e:
+            return None
+
+    @staticmethod
+    def get_publication_unit_by_type_and_link(publication_unit_type, publication_unit_link):
+        """Повертає публікаційну одиницю за посиланням"""
+        try:
+            if publication_unit_type == 'volume':
+                return Volumes.objects.get(link=publication_unit_link)
+            elif publication_unit_type == 'season':
+                return Seasons.objects.get(link=publication_unit_link)
+            else:
+                return None
+        except Exception:
             return None

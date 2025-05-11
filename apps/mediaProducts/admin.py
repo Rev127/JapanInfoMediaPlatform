@@ -62,16 +62,20 @@ class MangaAdmin(admin.ModelAdmin):
     # Аналогічно для ManyToManyField:
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         if db_field.name == "publication_unit":
-            used = Manga.objects.all().values_list("publication_unit__id", flat=True)
-
             obj_id = request.resolver_match.kwargs.get('object_id')
-            current_units = []
+
             if obj_id:
                 try:
                     manga_obj = Manga.objects.get(pk=obj_id)
                     current_units = list(manga_obj.publication_unit.values_list("id", flat=True))
+                    used = Manga.objects.exclude(pk=obj_id).values_list("publication_unit__id", flat=True)
                 except Manga.DoesNotExist:
-                    pass
+                    current_units = []
+                    used = []
+            else:
+                # Якщо ми створюємо новий об’єкт, просто показуємо всі Volumes
+                kwargs["queryset"] = Volumes.objects.all()
+                return super().formfield_for_manytomany(db_field, request, **kwargs)
 
             kwargs["queryset"] = Volumes.objects.filter(
                 Q(id__in=current_units) | ~Q(id__in=used)
@@ -90,16 +94,20 @@ class AnimeAdmin(admin.ModelAdmin):
 
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         if db_field.name == "publication_unit":
-            used = Anime.objects.all().values_list("publication_unit__id", flat=True)
-
             obj_id = request.resolver_match.kwargs.get('object_id')
-            current_units = []
+
             if obj_id:
                 try:
                     anime_obj = Anime.objects.get(pk=obj_id)
                     current_units = list(anime_obj.publication_unit.values_list("id", flat=True))
+                    used = Anime.objects.exclude(pk=anime_obj.pk).values_list("publication_unit__id", flat=True)
                 except Anime.DoesNotExist:
-                    pass
+                    current_units = []
+                    used = []
+            else:
+                # Створення нового об'єкта: показати всі
+                kwargs["queryset"] = Seasons.objects.all()
+                return super().formfield_for_manytomany(db_field, request, **kwargs)
 
             kwargs["queryset"] = Seasons.objects.filter(
                 Q(id__in=current_units) | ~Q(id__in=used)
@@ -120,16 +128,20 @@ class NovelAdmin(admin.ModelAdmin):
     # Аналогічно для ManyToManyField:
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         if db_field.name == "publication_unit":
-            used = Novel.objects.all().values_list("publication_unit__id", flat=True)
-
             obj_id = request.resolver_match.kwargs.get('object_id')
-            current_units = []
+
             if obj_id:
                 try:
                     novel_obj = Novel.objects.get(pk=obj_id)
                     current_units = list(novel_obj.publication_unit.values_list("id", flat=True))
+                    used = Novel.objects.exclude(pk=novel_obj.pk).values_list("publication_unit__id", flat=True)
                 except Novel.DoesNotExist:
-                    pass
+                    current_units = []
+                    used = []
+            else:
+                # Створення нового об'єкта: показати всі
+                kwargs["queryset"] = Volumes.objects.all()
+                return super().formfield_for_manytomany(db_field, request, **kwargs)
 
             kwargs["queryset"] = Volumes.objects.filter(
                 Q(id__in=current_units) | ~Q(id__in=used)

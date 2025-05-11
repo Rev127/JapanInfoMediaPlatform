@@ -36,6 +36,9 @@ class Work(models.Model):
     def get_title(self):
         return self.title
 
+    def get_absolute_url(self):
+        return f"/work/{self.link}/"
+
 class Genre(models.Model):
     name = models.CharField(max_length=50, verbose_name='Назва')
     description = models.TextField(max_length=255, blank=True, null=True, verbose_name='Опис')
@@ -95,7 +98,6 @@ class Publication(models.Model):
         if not self.link:
             self.link = slugify(self.title, to_lower=True)
         super().save(*args, **kwargs)
-
 
 class Manga(Publication):
     artist = models.CharField(max_length=50, blank=True, null=True, verbose_name='Художник')
@@ -295,9 +297,15 @@ class CharacterPublication(models.Model):
     publication_type = models.CharField(max_length=50, choices=PublicationType.choices, verbose_name='Тип роботи')
 
     def clean(self):
-        # Перевірка, чи вже існує CharacterPublication з таким типом для цього персонажа
-        if CharacterPublication.objects.filter(character=self.character, publication_type=self.publication_type).exists():
-            raise ValidationError(f"CharacterPublication with type '{self.publication_type}' already exists for this character.")
+        if self.character_id and self.publication_type:
+            exists = CharacterPublication.objects.filter(
+                character=self.character,
+                publication_type=self.publication_type
+            ).exclude(pk=self.pk).exists()  # додали exclude, щоб уникати хибнопозитиву при редагуванні
+            if exists:
+                raise ValidationError(
+                    f"CharacterPublication with type '{self.publication_type}' already exists for this character."
+                )
 
     def save(self, *args, **kwargs):
         # Виклик clean перед збереженням
