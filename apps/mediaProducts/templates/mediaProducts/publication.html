@@ -10,37 +10,71 @@
     <div class="publication-header">
         <!-- Publication Image -->
         <div class="publication-image">
-            <p>Image not available</p>
+            {% if publication.get_cover_image %}
+            <img src="{{ publication.get_cover_image }}" alt="{{ publication.get_title }}"
+                 style="width: 100%; height: 100%;">
+            {% else %}
+            <div class="placeholder">Image not available</div>
+            {% endif %}
         </div>
 
         <!-- Publication Info -->
         <div class="publication-info">
-            <h1>Publication name</h1>
+            <h1>{{ publication.get_title }}</h1>
+            {% if type == 'manga' %}
             <div>
-                <p>artist/illustrator/director</p>
+                <h2>Художник: {{ publication.get_artist }}</h2>
             </div>
             <div>
-                <p>publisher/studio</p>
+                <h2>Видавництво: {{ publication.get_publisher }}</h2>
             </div>
-        </div>
+            {% elif type == 'anime' %}
+            <div>
+                <h2>Режисер: {{ publication.get_director }}</h2>
+            </div>
+            <div>
+                <h2>Студія: {{ publication.get_studio }}</h2>
+            </div>
+            {% elif type == 'novel' %}
+            <div>
+                <h2>Ілюстратор: {{ publication.get_illustrator }}</h2>
+            </div>
+            <div>
+                <h2>Видавництво: {{ publication.get_publisher }}</h2>
+            </div>
+            {% endif %}
     </div>
+</div>
 </div>
 
 <div class="container">
     <h1>Томи/Сезони</h1>
     <!-- Volumes/Seasons Section -->
     <section>
+        {% if publication_unit %}
         <div class="cards">
+            {% for unit in publication_unit %}
             <div class="card">
                 <div class="thumbnail">
-                    <img src="" alt="" style="width: 100%; height: 100%;">
+                    {% if unit.get_title_image %}
+                    <img src="{{ get_title_image }}" alt="{{ unit.get_title }}" style="width: 100%; height: 100%;">
+                    {% else %}
                     <div class="placeholder">No Image</div>
+                    {% endif %}
                 </div>
                 <div class="title-wrapper">
-                    <p class="title"><a href="">Volume №_</a></p>
+                    {% if type == 'manga' or 'novel'%}
+                    <p class="title" title="{{ unit.get_title }}"><a href="{% url 'publication_unit' type='volume' link=unit.link %}">{{ unit.get_title }}</a></p>
+                    {% elif type == 'anime' %}
+                    <p class="title" title="{{ unit.get_title }}"><a href="{% url 'publication_unit' type='season' link=unit.link %}">{{ unit.get_title }}</a></p>
+                    {% endif %}
                 </div>
             </div>
+            {% endfor %}
         </div>
+        {% else %}
+        <p>Немає наявних одиниць публікацій</p>
+        {% endif %}
     </section>
 </div>
 

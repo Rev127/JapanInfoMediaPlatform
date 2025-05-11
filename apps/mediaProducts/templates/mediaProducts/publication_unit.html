@@ -5,28 +5,37 @@
 {% endblock %}
 {% block body %}
 
-
 <div class="container">
     <div class="publicationunit-header">
         <!-- Publication Image -->
         <div class="publicationunit-image">
-            <p>Image not available</p>
+            {% if publication_unit.get_title_image %}
+            <img src="{{ publication_unit.get_title_image }}" alt="{{ publication_unit.get_title }}" style="width: 100%; height: 100%; object-fit: cover;">
+            {% else %}
+            <div class="placeholder">Image not available</div>
+            {% endif %}
         </div>
 
         <!-- Publication Info -->
         <div class="publicationunit-info">
-            <h1>Publication unit name</h1>
+            <h1>{{ publication_unit.get_title }}</h1>
             <div>
-                <p>year of release</p>
+                <h2>Рік виходу: {{ publication_unit.get_year_of_release }}</h2>
             </div>
+            {% if type == 'volume' %}
             <div>
-                <p>chapter/episode count</p>
+                <h2>Кількість розділів: {{ publication_unit.get_chapter_count }}</h2>
             </div>
+            {% elif type == 'season' %}
+            <div>
+                <h2>Кількість серій: {{ publication_unit.get_episode_count }}</h2>
+            </div>
+            {% endif %}
         </div>
     </div>
     <h2>Опис:</h2>
     <div class="description">
-        <p>description</p>
+        <p>{{ publication_unit.get_description|safe }}</p>
     </div>
 </div>
 
@@ -35,15 +44,36 @@
     <!-- Character Section -->
     <section>
         <div class="cards">
-            <div class="card">
-                <div class="thumbnail">
-                    <img src="" alt="" style="width: 100%; height: 100%;">
-                    <div class="placeholder">No Image</div>
-                </div>
-                <div class="title-wrapper">
-                    <p class="title"><a href="">Character name</a></p>
-                </div>
-            </div>
+            {% for character in publication_unit.get_active_characters %}
+<div class="card" onclick="openModal('modal-{{ forloop.counter }}')">
+    <div class="thumbnail">
+        {% if character.get_image %}
+        <img src="{{ character.get_image }}" alt="{{ character.get_name }}" style="width: 100%; height: 100%;">
+        {% else %}
+        <div class="placeholder">No Image</div>
+        {% endif %}
+    </div>
+    <div class="title-wrapper">
+        <p class="title" title="{{ character.get_name }}">{{ character.get_name }}</p>
+    </div>
+</div>
+
+<!-- Модальне вікно -->
+<div id="modal-{{ forloop.counter }}" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('modal-{{ forloop.counter }}')">&times;</span>
+        <h1>{{ character.get_name }}</h1>
+        {% for character_description in character.get_character_publications %}
+        <div class="description">
+            <p><strong>Тип опису:</strong> {{ character_description.get_publication_type }}</p>
+            <p><strong>Опис:</strong><div class="description-field">{{ character_description.get_description|safe }}</div></p>
+        </div>
+        {% empty %}
+            <p>Немає опису для цього персонажа</p>
+        {% endfor %}
+    </div>
+</div>
+            {% endfor %}
         </div>
     </section>
 </div>
@@ -52,32 +82,26 @@
     <h1>Коментарі</h1>
     <!-- Comments Section -->
     <section>
+        {% if comments %}
         <div class="comments">
+            {% for comment in comments %}
             <div class="comment">
                 <div class="comment-header">
                     <img src="" class="comment-image">
-                    <p>Author</p>
+                    <p>{{ comment.get_user.username }}</p>
                     <div class="comment-date">
-                        <p>date</p>
+                        <p>{{ comment.get_created_at }}</p>
                     </div>
                 </div>
                 <div class="comment-body">
-                    <p>Comment text</p>
+                    <p>{{ comment.get_content }}</p>
                 </div>
             </div>
-            <div class="comment">
-                <div class="comment-header">
-                    <img src="" class="comment-image">
-                    <p>Author</p>
-                    <div class="comment-date">
-                        <p>date</p>
-                    </div>
-                </div>
-                <div class="comment-body">
-                    <p>Comment text</p>
-                </div>
-            </div>
+            {% endfor %}
         </div>
+        {% else %}
+        <h3>Немає коментарів</h3>
+        {% endif %}
     </section>
 </div>
 
