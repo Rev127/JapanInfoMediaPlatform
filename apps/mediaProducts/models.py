@@ -2,13 +2,14 @@ from ckeditor.fields import RichTextField
 from django.db import models
 from slugify import slugify
 from django.core.exceptions import ValidationError
+from filebrowser.fields import FileBrowseField
 
 # Create your models here.
 
 class Work(models.Model):
     title = models.CharField(max_length=255)
     description = RichTextField(blank=True, null=True, verbose_name='Опис')
-    image = models.ImageField(upload_to='works/', blank=True, null=True, verbose_name='Зображення')
+    image = FileBrowseField(verbose_name='Зображення твору', max_length=255, directory='work_image/', extensions=['.jpg', '.jpeg', '.png'], blank=True, null=True)
     genre = models.ManyToManyField('Genre', related_name='works', verbose_name='Жанр')
     author = models.ForeignKey('Author', on_delete=models.CASCADE, related_name='works', verbose_name='Автор')
     link = models.CharField(max_length=255, blank=True, null=True, verbose_name='Посилання')
@@ -71,7 +72,7 @@ class Author(models.Model):
 
 class Publication(models.Model):
     title = models.CharField(max_length=255, verbose_name='Назва')
-    cover_image = models.ImageField(upload_to='publications/', blank=True, null=True, verbose_name='Обкладинка')
+    cover_image = FileBrowseField(verbose_name='Обкладинка', max_length=255, directory='publication_image/', extensions=['.jpg', '.jpeg', '.png'], blank=True, null=True)
     link = models.CharField(max_length=255, blank=True, null=True, verbose_name='Посилання')
     work = models.ForeignKey(Work, on_delete=models.CASCADE, related_name='%(class)s_publications', verbose_name='Твір')
     publication_unit = models.ManyToManyField('PublicationUnit', blank=True, related_name='%(class)s_publications', verbose_name='Публікаційна одиниця')
@@ -183,7 +184,7 @@ class Anime(Publication):
 class PublicationUnit(models.Model):
     title = models.CharField(max_length=255, verbose_name='Назва')
     description = RichTextField(blank=True, null=True, verbose_name='Опис')
-    title_image = models.ImageField(upload_to='publication_units/', blank=True, null=True, verbose_name='Зображення')
+    title_image = FileBrowseField(verbose_name='Зображення обкладинки', max_length=255, directory='publication_unit_image/', extensions=['.jpg', '.jpeg', '.png'], blank=True, null=True)
     link = models.CharField(max_length=255, blank=True, null=True, verbose_name='Посилання')
     year_of_release = models.PositiveIntegerField(default=0, blank=True, null=True, verbose_name='Рік випуску')
     number = models.PositiveIntegerField(default=0, blank=True, null=True, verbose_name='Номер')
@@ -253,7 +254,7 @@ class Seasons(PublicationUnit):
 
 class Characters(models.Model):
     name = models.CharField(max_length=50, verbose_name='Ім\'я')
-    image = models.ImageField(upload_to='characters/', blank=True, null=True, verbose_name='Зображення')
+    image = FileBrowseField(verbose_name='Зображення персонажа', max_length=255, directory='characters_image/', extensions=['.jpg', '.jpeg', '.png'], blank=True, null=True)
 
     def __str__(self):
         # Отримуємо всі PublicationUnit, де цей персонаж є активним
