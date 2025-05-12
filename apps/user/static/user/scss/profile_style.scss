@@ -44,7 +44,7 @@
     font-size: 16px;
     border: none;
     background-color: #34D399;
-    color: #233833;
+    color: #2C2C2C;
     border-radius: 20px;
     cursor: pointer;
     width: 100%;
@@ -58,6 +58,7 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
+    margin-top: 10px; /* Відступ зверху для форми */
 }
 
 .update-form .form-group {
@@ -82,7 +83,7 @@
     padding: 10px 15px;
     border: none;
     background-color: #34D399;
-    color: #233833;
+    color: #2C2C2C;
     border-radius: 20px;
     cursor: pointer;
     font-size: 14px;
@@ -124,38 +125,3 @@
     background-color: #ddd;
 }
 
-
-
-
-.liked-novels {
-    margin-top: 50px;
-}
-
-.liked-novels h2 {
-    margin-bottom: 15px;
-    text-align: center;
-}
-
-.novel-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 20px;
-}
-
-.novel-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: #3d3636;
-    border-radius: 10px;
-    padding: 10px;
-    color: #fff;
-}
-
-.novel-item img {
-    width: 100%;
-    height: 200px;
-    background-color: #c4c4c4;
-    border-radius: 10px;
-    margin-bottom: 10px;
-}

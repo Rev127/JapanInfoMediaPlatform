@@ -15,3 +15,8 @@ window.onclick = function(event) {
         }
     });
 }
+
+setTimeout(function () {
+    const toast = document.getElementById('toast-message');
+    if (toast) toast.remove();
+}, 4000); // зникне через 4 секунди
