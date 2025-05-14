@@ -29,20 +29,48 @@ html, body {
     line-height: 43px;
     color: #D1FAE5;
 
-                        a {
-                        color: inherit;
-                        text-decoration: none;
-                    }
+    a {
+        color: inherit;
+        text-decoration: none;
+    }
+  }
+
+  .nav-bar {
+    display: flex;
+    gap: 20px;
+    font-size: 20px;
+    color: #D1FAE5;
+
+    .nav-item{
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+
+      a {
+        color: inherit; /* Спадкує колір від батьківського елемента */
+        text-decoration: none; /* Без підкреслення */
+      }
+
+        &:hover {
+            color: #34D399; /* Колір при наведенні */
+            text-decoration: underline; /* Підкреслення при наведенні */
+        }
+    }
   }
 
   .search-bar {
+    position: relative; /* Для абсолютного позиціонування списку підказок */
     display: flex;
     align-items: center; /* Центруємо елементи по вертикалі */
     justify-content: center;
     margin: 20px 0;
     border-radius: 20px;
-    overflow: hidden; /* Щоб краї були рівно заокруглені */
+    overflow: visible; /* Щоб краї були рівно заокруглені */
     background-color: #34D399; /* Фон для заокруглення */
+
+    &.has-suggestions {
+    border-radius: 20px 20px 0 0; /* Забираємо заокруглення знизу */
+  }
 
     .search-input {
       width: 300px;
@@ -51,19 +79,52 @@ html, body {
       outline: none;
       background-color: #34D399;
       color: #2C2C2C;
+      font-size: 16px;
+      border-radius: 20px 0 0 20px; /* Заокруглені краї тільки з лівого боку */
+    }
+
+    .search-input::placeholder {
+      color: #2C2C2C; /* Колір тексту підказки */
+      opacity: 0.7; /* Прозорість тексту підказки */
     }
 
     .search-button {
-      width: 50px; /* Підлаштуй під розмір картинки */
       padding: 10px;
       border: none;
+      height: 100%;
+      border-radius: 0 20px 20px 0; /* Заокруглені краї тільки з правого боку */
       background-color: #34D399;
-      background-image: url('/media/icons/search_button_image.png');
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
-      color: transparent;
+      background-image: url('/media/icons/search_button_image.png'); /* Вкажіть шлях до вашого зображення */
+      background-size: contain; /* Зображення адаптується до розміру кнопки */
+      background-repeat: no-repeat; /* Забороняє повторення зображення */
+      background-position: center; /* Вирівнює зображення по центру */
+      color: transparent; /* Приховує текст (опціонально) */
       cursor: pointer;
+    }
+
+    .suggestions-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      top: 100%; /* Відстань від верхньої частини поля вводу */
+      position: absolute;
+      background: #34D399;
+      width: 100%;
+      z-index: 1000;
+      border-radius: 0 0 20px 20px; /* Заокруглені краї тільки знизу */
+
+      li {
+          padding: 0px 0px 0px 10px;
+          a{
+              text-decoration: none;
+              color: #2C2C2C;
+          }
+
+            &:hover {
+                background-color: #f0f0f0;
+                border-radius: 20px;
+            }
+        }
     }
   }
 
@@ -86,6 +147,28 @@ html, body {
       border: none;
     }
   }
+
+  .mini-user-info {
+    display: flex;
+    font-size: 16px;
+    align-items: center; /* Вирівнювання по вертикалі */
+    gap: 10px; /* Відстань між аватаром і текстом */
+    text-align: center;
+    color: #D1FAE5;
+
+    a {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .user-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 100%;
+    }
+}
+
+
 }
 
 .content {
@@ -353,6 +436,7 @@ html, body {
 
     .footer-about_us {
         padding-left: 50px;
+        width: 50%;
     }
 
     .footer-contacts {
@@ -360,6 +444,42 @@ html, body {
     }
   }
 }
+
+
+.toast-message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #333;
+    color: #fff;
+    padding: 15px 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    z-index: 9999;
+    animation: fadeout 4s forwards;
+
+    p {
+        margin: 0;
+    }
+
+    .success {
+        color: #28a745;
+    }
+
+    .error {
+        color: #dc3545;
+    }
+
+    /* Анімація зникнення */
+    @keyframes fadeout {
+        0% { opacity: 1; }
+        80% { opacity: 1; }
+        100% { opacity: 0; display: none; }
+    }
+}
+
+
+
 
 
 

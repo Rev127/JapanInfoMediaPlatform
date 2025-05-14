@@ -40,6 +40,9 @@ class Work(models.Model):
     def get_absolute_url(self):
         return f"/work/{self.link}/"
 
+    def get_link(self):
+        return self.link
+
 class Genre(models.Model):
     name = models.CharField(max_length=50, verbose_name='Назва')
     description = models.TextField(max_length=255, blank=True, null=True, verbose_name='Опис')

@@ -1,39 +1,57 @@
-from django.shortcuts import render
-from django.template.defaulttags import comment
+from django.shortcuts import render, redirect
 
 from .facade import MediaProductsViewer
 from apps.user.facade import UserViewer
+from django.contrib import messages
 
 # Create your views here.
 def work_view(request, link):
     work = MediaProductsViewer.get_work_info(link)
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        if action == 'track':
+            if MediaProductsViewer.track_work(request.user, work):
+                messages.success(request, "Work tracked successfully.")
+            else:
+                messages.error(request, "Work tracking failed.")
+        elif action == 'untrack':
+            if MediaProductsViewer.untrack_work(request.user, work):
+                messages.success(request, "Work untracked successfully.")
+            else:
+                messages.error(request, "Work untracking failed.")
+        return redirect('work', link=link)
+
     publications = MediaProductsViewer.get_publications_by_work(link)
+    is_tracked = False
+    if request.user.is_authenticated:
+        is_tracked = request.user.work_is_tracked(work)
     return render(request, 'mediaProducts/work.html', {
         'work': work,
-        'publications': publications
+        'publications': publications,
+        'is_tracked': is_tracked
     })
 
-def publication_view(request, type, link):
-    publication = MediaProductsViewer.get_publication_by_type(type, link)
+def publication_view(request, publication_type, link):
+    publication = MediaProductsViewer.get_publication_by_type(publication_type, link)
     if publication:
         publication_unit = MediaProductsViewer.get_publication_units_by_publication(publication)
     else:
         publication_unit = None
     return render(request, 'mediaProducts/publication.html', {
-        'type': type,
+        'type': publication_type,
         'publication': publication,
         'publication_unit': publication_unit
     })
 
-def publication_unit_view(request, type, link):
-    publication_unit = MediaProductsViewer.get_publication_unit_by_type_and_link(type, link)
+def publication_unit_view(request, publication_unit_type, link):
+    publication_unit = MediaProductsViewer.get_publication_unit_by_type_and_link(publication_unit_type, link)
     if publication_unit:
         comments = UserViewer.get_comments_by_publication_unit(publication_unit.id)
     else:
         comments = None
 
     return render(request, 'mediaProducts/publication_unit.html', {
-        'type': type,
+        'type': publication_unit_type,
         'publication_unit': publication_unit,
         'comments': comments
     })

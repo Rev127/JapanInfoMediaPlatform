@@ -18,8 +18,32 @@
             {% endif %}
         </div>
 
+        {% if messages %}
+            <div id="toast-message" class="toast-message">
+                {% for message in messages %}
+                    <p class="{{ message.tags }}">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
         <div class="work-info">
-            <h1>{{ work.get_title }}</h1>
+            <div class="work-title">
+                {% if user.is_authenticated %}
+                  <form method="POST" action="{% url 'work' link=work.get_link %}" class="bookmark-form">
+                    {% csrf_token %}
+                    {% if is_tracked %}
+                      <button class="bookmark-button" type="submit" name="action" value="untrack" data-description="Відстежується">
+                        <img src="/media/icons/bookmark_icon_filled.png" alt="Відстежується">
+                      </button>
+                    {% else %}
+                      <button class="bookmark-button" type="submit" name="action" value="track" data-description="Додати до відстеження">
+                        <img src="/media/icons/bookmark_icon_outline.png" alt="Додати до відстеження">
+                      </button>
+                    {% endif %}
+                  </form>
+                {% endif %}
+                <h1>{{ work.get_title }}</h1>
+              </div>
             <h2>Жанри:</h2>
             <div class="genres">
                 {% for genre in work.get_genres %}

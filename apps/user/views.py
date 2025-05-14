@@ -4,7 +4,6 @@ from pyexpat.errors import messages
 from .facade import UserViewer
 from django.views.generic import CreateView
 from django.urls import reverse_lazy
-from django.contrib.auth import login
 from .forms import CustomUserCreationForm
 from django.contrib import messages
 

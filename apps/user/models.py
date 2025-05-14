@@ -17,6 +17,8 @@ class Profile(AbstractUser):
     def get_avatar(self):
         return self.avatar.url if self.avatar else None
 
+    def work_is_tracked(self, work):
+        return self.tracking_works.filter(id=work.id).exists()
 
     def __str__(self):
         return self.username

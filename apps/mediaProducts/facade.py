@@ -1,4 +1,4 @@
-from .models import Work, Manga, Anime, Novel, Publication, Volumes, Seasons
+from .models import Work, Manga, Anime, Novel, Volumes, Seasons
 from django.db.models import Max
 
 class MediaProductsViewer:
@@ -73,4 +73,28 @@ class MediaProductsViewer:
             else:
                 return None
         except Exception:
+            return None
+
+    @staticmethod
+    def track_work(user, work):
+        """Додає твір до відстежуваних"""
+        if not user.work_is_tracked(work):
+            user.tracking_works.add(work)
+            return True
+        return False
+
+    @staticmethod
+    def untrack_work(user, work):
+        """Видаляє твір з відстежуваних"""
+        if user.work_is_tracked(work):
+            user.tracking_works.remove(work)
+            return True
+        return False
+
+    @staticmethod
+    def get_works_by_title_fragment(title):
+        """Повертає твір за назвою"""
+        try:
+            return Work.objects.filter(title__icontains=title)
+        except Work.DoesNotExist:
             return None

@@ -24,13 +24,13 @@
         </div>
     </div>
 
-{% if messages %}
-    <div id="toast-message" class="toast-message">
-        {% for message in messages %}
-            <p class="{{ message.tags }}">{{ message }}</p>
-        {% endfor %}
-    </div>
-{% endif %}
+    {% if messages %}
+        <div id="toast-message" class="toast-message">
+            {% for message in messages %}
+                <p class="{{ message.tags }}">{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
 
 
     <!-- Update Profile Information -->
