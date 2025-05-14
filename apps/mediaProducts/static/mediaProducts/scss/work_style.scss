@@ -181,6 +181,46 @@
     }
 }
 
+.add-comment{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    padding: 20px;
+
+
+    textarea {
+        background-color: #2E534A;
+        padding: 20px;
+        border-radius: 20px;
+        color: #D1FAE5;
+        width: 100%;
+        resize: none;
+        border: none;
+        box-sizing: border-box;
+
+        &::placeholder {
+            color: #0F1D1A;
+            opacity: 0.5;
+        }
+    }
+
+    button {
+        background-color: #34D399;
+        color: #2C2C2C;
+        border-radius: 20px;
+        padding: 10px 20px;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+        border: none;
+
+        &:hover {
+            background-color: #ddd;
+        }
+    }
+}
+
 
 
 

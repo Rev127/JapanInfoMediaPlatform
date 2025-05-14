@@ -104,5 +104,26 @@
         {% endif %}
     </section>
 </div>
+{% if user.is_authenticated %}
+<div class="container">
+    <h3>Додати коментар</h3>
+    <!-- Add Comment Section -->
+    <section>
+        <form method="POST" class="add-comment" action="{% url 'publication_unit' publication_unit_type=type link=publication_unit.link %}">
+            {% csrf_token %}
+            <textarea name="comment" placeholder="Ваш коментар" required></textarea>
+            <button type="submit" name="action" value="add_comment">Додати коментар</button>
+        </form>
+    </section>
+</div>
+{% endif %}
+
+{% if messages %}
+<div id="toast-message" class="toast-message">
+    {% for message in messages %}
+    <p class="{{ message.tags }}">{{ message }}</p>
+    {% endfor %}
+</div>
+{% endif %}
 
 {% endblock %}

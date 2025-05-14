@@ -1,3 +1,4 @@
+from django.contrib.admin import action
 from django.shortcuts import render, redirect
 
 from .facade import MediaProductsViewer
@@ -49,6 +50,20 @@ def publication_unit_view(request, publication_unit_type, link):
         comments = UserViewer.get_comments_by_publication_unit(publication_unit.id)
     else:
         comments = None
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        if action == 'add_comment':
+            content = request.POST.get('comment')
+            if content:
+                comment = UserViewer.add_comment(request.user, publication_unit, content)
+                if comment:
+                    messages.success(request, "Коментар успішно додано.")
+                else:
+                    messages.error(request, "Додати коментар не вдалося.")
+            else:
+                messages.error(request, "Коментар не може бути порожнім.")
+            return redirect('publication_unit', publication_unit_type=publication_unit_type, link=link)
 
     return render(request, 'mediaProducts/publication_unit.html', {
         'type': publication_unit_type,

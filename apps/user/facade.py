@@ -53,3 +53,10 @@ class UserViewer:
     def get_comments_by_publication_unit(publication_unit_id):
         """Повертає коментарі до публікаційної одиниці"""
         return Comment.objects.filter(publication_unit_id=publication_unit_id)
+
+    @staticmethod
+    def add_comment(user, publication_unit, content):
+        """Додає коментар до публікаційної одиниці"""
+        comment = Comment(user=user, publication_unit=publication_unit, content=content)
+        comment.save()
+        return comment
