@@ -64,9 +64,9 @@
                 </div>
                 <div class="title-wrapper">
                     {% if type == 'manga' or 'novel'%}
-                    <p class="title" title="{{ unit.get_title }}"><a href="{% url 'publication_unit' type='volume' link=unit.link %}">{{ unit.get_title }}</a></p>
+                    <p class="title" title="{{ unit.get_title }}"><a href="{% url 'publication_unit' publication_unit_type='volume' link=unit.link %}">{{ unit.get_title }}</a></p>
                     {% elif type == 'anime' %}
-                    <p class="title" title="{{ unit.get_title }}"><a href="{% url 'publication_unit' type='season' link=unit.link %}">{{ unit.get_title }}</a></p>
+                    <p class="title" title="{{ unit.get_title }}"><a href="{% url 'publication_unit' publication_unit_type='season' link=unit.link %}">{{ unit.get_title }}</a></p>
                     {% endif %}
                 </div>
             </div>

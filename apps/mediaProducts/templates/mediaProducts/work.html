@@ -79,7 +79,7 @@
         </div>
         <div class="title-wrapper">
             <p class="title" title="{{ manga.get_title }}">
-                <a href="{% url 'publication' type='manga' link=manga.link %}">Манга</a>
+                <a href="{% url 'publication' publication_type='manga' link=manga.link %}">Манга</a>
             </p>
         </div>
     </div>
@@ -98,7 +98,7 @@
         </div>
         <div class="title-wrapper">
             <p class="title" title="{{ novel.get_title }}">
-                <a href="{% url 'publication' type='novel' link=novel.link %}">{{ novel.get_title }}</a>
+                <a href="{% url 'publication' publication_type='novel' link=novel.link %}">{{ novel.get_title }}</a>
             </p>
         </div>
     </div>
@@ -117,7 +117,7 @@
         </div>
         <div class="title-wrapper">
             <p class="title" title="{{ anime.get_title }}">
-                <a href="{% url 'publication' type='anime' link=anime.link %}">Аніме</a>
+                <a href="{% url 'publication' publication_type='anime' link=anime.link %}">Аніме</a>
             </p>
         </div>
     </div>
