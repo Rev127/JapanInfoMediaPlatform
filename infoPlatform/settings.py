@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'ckeditor_uploader',
     'mptt',
-    'compressor'
+    'compressor',
 ]
 
 MIDDLEWARE = [
@@ -213,6 +213,10 @@ COMPRESS_FILTERS = {
 }
 HTML_MINIFY = True
 KEEP_COMMENTS_ON_MINIFYING = True
+
+COMPRESS_PRECOMPILERS = (
+    ('text/x-scss', 'django_libsass.SassCompiler'),
+)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

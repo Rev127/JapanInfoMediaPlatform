@@ -87,7 +87,7 @@
             {% for comment in comments %}
             <div class="comment">
                 <div class="comment-header">
-                    <img src="" class="comment-image">
+                    <img src="{{ comment.get_user.get_avatar }}" class="comment-image">
                     <p>{{ comment.get_user.username }}</p>
                     <div class="comment-date">
                         <p>{{ comment.get_created_at }}</p>

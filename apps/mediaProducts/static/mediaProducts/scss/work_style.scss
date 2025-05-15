@@ -1,18 +1,18 @@
+@import 'infoPlatformMainApp/static/mainapp/scss/units/variables'; // Імпорт змінних SCSS
+@import 'infoPlatformMainApp/static/mainapp/scss/units/mixins'; // Імпорт міксинів SCSS
+
 .work-header, .publication-header, .publicationunit-header{
-    display: flex;
-    gap: 20px;
+    @include flex-custom(row, flex-start, center, 20px);
 
     .work-image, .publication-image, .publicationunit-image{
         width: 300px;
         height: 400px;
-        background-color: #ccc;
+        background-color: $color-image-bg;
 
         .placeholder {
-            color: #777;
+            color: $color-image-placeholder;
             font-size: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            @include flex-custom(column, center, center);
             text-align: center;
         }
     }
@@ -21,9 +21,7 @@
         flex: 1;
 
         .work-title{
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            @include flex-custom(row, center, center);
 
             .bookmark-form {
               margin: 0;
@@ -35,10 +33,8 @@
                   margin-right: 10px; /* Відступ справа, щоб не злипалось з текстом заголовка */
                   cursor: pointer;
                   vertical-align: middle;
-                  display: inline-flex;
-                  align-items: center;
-                  justify-content: center;
-                    position: relative; /* Для позиціонування псевдоелемента */
+                  @include flex-custom(row, center, center);
+                  position: relative; /* Для позиціонування псевдоелемента */
 
                     img {
                       width: 24px;   /* або менше, залежно від дизайну */
@@ -52,22 +48,7 @@
                     }
 
                     &::after {
-                        content: attr(data-description);
-                        position: absolute;
-                        top: 100%;
-                        right: 0%;
-                        transform: translateX(10px);
-                        background-color: #233833;
-                        color: #D1FAE5;
-                        padding: 5px 10px;
-                        border-radius: 5px;
-                        border: 3px solid #0F1D1A;
-                        font-size: 12px;
-                        white-space: nowrap;
-                        opacity: 0;
-                        visibility: hidden;
-                        transition: opacity 0.2s ease, visibility 0.2s ease;
-                        z-index: 10;
+                        @include tooltip();
                     }
 
                     &:hover::after {
@@ -87,30 +68,15 @@
     margin: 10px 0;
 
     .genre {
-        background-color: #233833;
+        background-color: $color-section-bg;
         padding: 5px 10px;
         border-radius: 5px;
-        color: #D1FAE5;
+        color: $color-text;
         position: relative;
         cursor: pointer;
 
     &::after {
-        content: attr(data-description);
-        position: absolute;
-        top: 100%;
-        right: 0%;
-        transform: translateX(10px);
-        background-color: #233833;
-        color: #D1FAE5;
-        padding: 5px 10px;
-        border-radius: 5px;
-        border: 3px solid #0F1D1A;
-        font-size: 12px;
-        white-space: nowrap;
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.2s ease, visibility 0.2s ease;
-        z-index: 10;
+        @include tooltip();
     }
 
     &:hover::after {
@@ -122,7 +88,7 @@
 
 
 .description, .author {
-    background-color: #233833;
+    background-color: $color-section-bg;
 
     padding: 20px;
     border-radius: 20px;
@@ -130,21 +96,20 @@
 
     p {
         margin: 0;
-        color: #D1FAE5;
+        color: $color-text;
     }
 }
 
 .comments {
-    display: flex;
-    flex-direction: column;
+    @include flex-custom(column, center, center);
     width: 100%;
 
     .comment {
-        background-color: #233833;
+        background-color: $color-section-bg;
         padding: 20px;
         border-radius: 20px;
         margin-top: 10px;
-        color: #D1FAE5;
+        color: $color-text;
         width: 100%; // або max-width: 800px;
         box-sizing: border-box;
 
@@ -167,7 +132,7 @@
         }
 
         .comment-body {
-            background-color: #2E534A;
+            background-color: $color-card-bg;
             border-radius: 5px;
             padding: 10px;
             margin-top: 10px;
@@ -182,8 +147,7 @@
 }
 
 .add-comment{
-    display: flex;
-    flex-direction: column;
+    @include flex-custom(column, center, center);
     gap: 10px;
     width: 100%;
     padding: 20px;
@@ -206,8 +170,8 @@
     }
 
     button {
-        background-color: #34D399;
-        color: #2C2C2C;
+        background-color: $color-element-bg;
+        color: $color-text-secondary;
         border-radius: 20px;
         padding: 10px 20px;
         cursor: pointer;
