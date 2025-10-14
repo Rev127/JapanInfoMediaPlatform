@@ -79,7 +79,7 @@
         </div>
         <div class="title-wrapper">
             <p class="title" title="{{ manga.get_title }}">
-                <a href="{% url 'publication' publication_type='manga' link=manga.link %}">Манга</a>
+                <a href="{% url 'publication' publication_type='manga' link=manga.get_link %}">Манга</a>
             </p>
         </div>
     </div>
