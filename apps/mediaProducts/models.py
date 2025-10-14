@@ -98,6 +98,9 @@ class Publication(models.Model):
     def get_work(self):
         return self.work
 
+    def get_link(self):
+        return self.link
+
     def save(self, *args, **kwargs):
         if not self.link:
             self.link = slugify(self.title, to_lower=True)
@@ -228,9 +231,6 @@ class PublicationUnit(models.Model):
         return self.status
 
 # Removed the get_publication method as it references an undefined attribute.
-
-    def get_last_update(self):
-        return self.last_update
 
     def save(self, *args, **kwargs):
         if not self.link:

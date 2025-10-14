@@ -5,11 +5,14 @@ from filebrowser.fields import FileBrowseField
 
 # Create your models here.
 class Profile(AbstractUser):
-    avatar = FileBrowseField(verbose_name='Аватар', max_length=255, directory='user_avatar/', extensions=['.jpg', '.jpeg', '.png'], blank=True, null=True)
-
-    groups = models.ManyToManyField(Group, related_name="user_profiles", blank=True, verbose_name='Групи')
-    user_permissions = models.ManyToManyField(Permission, related_name="user_permissions_set", blank=True, verbose_name='Дозволи')
-    tracking_works = models.ManyToManyField(Work, verbose_name="Відстежувані твори", blank=True, related_name='tracking_works')
+    avatar = FileBrowseField(verbose_name='Аватар', max_length=255,
+                             directory='user_avatar/', extensions=['.jpg', '.jpeg', '.png'], blank=True, null=True)
+    groups = models.ManyToManyField(Group, related_name="user_profiles",
+                                    blank=True, verbose_name='Групи')
+    user_permissions = models.ManyToManyField(Permission, related_name="user_permissions_set",
+                                              blank=True, verbose_name='Дозволи')
+    tracking_works = models.ManyToManyField(Work, verbose_name="Відстежувані твори",
+                                            blank=True, related_name='tracking_works')
 
     def get_tracking_works(self):
         return self.tracking_works.all()
