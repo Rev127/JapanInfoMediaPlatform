@@ -1,6 +1,8 @@
 from django.db import models
 from slugify import slugify
 from apps.user.models import Profile
+from filebrowser.fields import FileBrowseField
+
 
 # Create your models here.
 class BasicNews(models.Model):
@@ -33,7 +35,7 @@ class ServerNews(BasicNews):
         return self.news_type
 
 class WorkNews(BasicNews):
-    image = models.ImageField(upload_to='news/', blank=True, null=True, verbose_name='Зображення')
+    image = FileBrowseField(verbose_name='Зображення для новин', max_length=255, directory='news_image/', extensions=['.jpg', '.jpeg', '.png'], blank=True, null=True)
     link = models.CharField(max_length=255, blank=True, null=True, verbose_name='Посилання')
     title = models.CharField(max_length=255, verbose_name='Заголовок')
 

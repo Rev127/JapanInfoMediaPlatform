@@ -20,3 +20,14 @@ class UserViewerTestCase(TestCase):
     def test_get_comments_by_publication_unit(self):
         comments = UserViewer.get_comments_by_publication_unit(self.volume.id)
         self.assertEqual(self.comment, comments.first())
+
+    def test_add_comment(self):
+        new_comment = UserViewer.add_comment(self.user, self.volume, "Another test comment")
+        self.assertEqual(new_comment.content, "Another test comment")
+        self.assertEqual(new_comment.user, self.user)
+        self.assertEqual(new_comment.publication_unit, self.volume)
+
+    def test_update_profile_username(self):
+        result = UserViewer.update_profile('username_update', 'newusername', self.user)
+        self.assertTrue(result)
+        self.assertEqual(self.user.username, 'newusername')

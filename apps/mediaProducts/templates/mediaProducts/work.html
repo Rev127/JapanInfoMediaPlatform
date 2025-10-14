@@ -10,27 +10,55 @@
     <div class="work-header">
         <!-- Publication Image -->
         <div class="work-image">
-            <p>Image not available</p>
+            {% if work.get_image %}
+            <img src="{{ work.get_image }}" alt="{{ work.get_title }}"
+                 style="width: 100%; height: 100%;">
+            {% else %}
+            <div class="placeholder">Image not available</div>
+            {% endif %}
         </div>
 
+        {% if messages %}
+            <div id="toast-message" class="toast-message">
+                {% for message in messages %}
+                    <p class="{{ message.tags }}">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
         <div class="work-info">
-            <h1>Work name</h1>
+            <div class="work-title">
+                {% if user.is_authenticated %}
+                  <form method="POST" action="{% url 'work' link=work.get_link %}" class="bookmark-form">
+                    {% csrf_token %}
+                    {% if is_tracked %}
+                      <button class="bookmark-button" type="submit" name="action" value="untrack" data-description="Відстежується">
+                        <img src="/media/icons/bookmark_icon_filled.png" alt="Відстежується">
+                      </button>
+                    {% else %}
+                      <button class="bookmark-button" type="submit" name="action" value="track" data-description="Додати до відстеження">
+                        <img src="/media/icons/bookmark_icon_outline.png" alt="Додати до відстеження">
+                      </button>
+                    {% endif %}
+                  </form>
+                {% endif %}
+                <h1>{{ work.get_title }}</h1>
+              </div>
             <h2>Жанри:</h2>
             <div class="genres">
-                <div class="genre">rfrfrr</div>
-                <div class="genre">rrgrgrgrg</div>
-                <div class="genre">rfrfjujujuj</div>
-                <div class="genre">rg</div>
+                {% for genre in work.get_genres %}
+                <div class="genre" data-description="{{ genre.get_description }}">{{ genre.get_name }}</div>
+                {% endfor %}
             </div>
-            <h2>Автор: </h2>
+            <h2>Автор: {{ work.get_author.get_name }} (робочі роки: {{ work.get_author.get_work_years }})</h2>
             <div class="author">
-                <p>Author description</p>
+                <p>{{ work.get_author.get_description }}</p>
             </div>
         </div>
     </div>
     <h2>Опис:</h2>
     <div class="description">
-        <p>description</p>
+        <p>{{ work.get_description|safe }}</p>
     </div>
 </div>
 
@@ -38,39 +66,69 @@
     <h1>Публікації</h1>
     <!-- Publication Section -->
     <section>
-        <div class="cards">
-            <div class="card">
-                <div class="thumbnail">
-                    <img src="" alt="" style="width: 100%; height: 100%;">
-                    <div class="placeholder">No Image</div>
-                </div>
-                <div class="title-wrapper">
-                    <p class="title"><a href="">Манга</a></p>
-                </div>
-            </div>
+    {% if publications.manga %}
+<div class="cards">
+    {% for manga in publications.manga %}
+    <div class="card">
+        <div class="thumbnail">
+            {% if manga.get_cover_image %}
+            <img src="{{ manga.get_cover_image }}" alt="{{ manga.get_title }}" style="width: 100%; height: 100%;">
+            {% else %}
+            <div class="placeholder">No Image</div>
+            {% endif %}
         </div>
-                <div class="cards">
-            <div class="card">
-                <div class="thumbnail">
-                    <img src="" alt="" style="width: 100%; height: 100%;">
-                    <div class="placeholder">No Image</div>
-                </div>
-                <div class="title-wrapper">
-                    <p class="title"><a href="">Новела</a></p>
-                </div>
-            </div>
+        <div class="title-wrapper">
+            <p class="title" title="{{ manga.get_title }}">
+                <a href="{% url 'publication' publication_type='manga' link=manga.get_link %}">Манга</a>
+            </p>
         </div>
-                <div class="cards">
-            <div class="card">
-                <div class="thumbnail">
-                    <img src="" alt="" style="width: 100%; height: 100%;">
-                    <div class="placeholder">No Image</div>
-                </div>
-                <div class="title-wrapper">
-                    <p class="title"><a href="">Аніме</a></p>
-                </div>
-            </div>
+    </div>
+    {% endfor %}
+{% endif %}
+
+{% if publications.novel %}
+    {% for novel in publications.novel %}
+    <div class="card">
+        <div class="thumbnail">
+            {% if novel.get_cover_image %}
+            <img src="{{ novel.get_cover_image }}" alt="{{ novel.get_title }}" style="width: 100%; height: 100%;">
+            {% else %}
+            <div class="placeholder">No Image</div>
+            {% endif %}
         </div>
+        <div class="title-wrapper">
+            <p class="title" title="{{ novel.get_title }}">
+                <a href="{% url 'publication' publication_type='novel' link=novel.link %}">{{ novel.get_title }}</a>
+            </p>
+        </div>
+    </div>
+    {% endfor %}
+{% endif %}
+
+{% if publications.anime %}
+    {% for anime in publications.anime %}
+    <div class="card">
+        <div class="thumbnail">
+            {% if anime.get_cover_image %}
+            <img src="{{ anime.get_cover_image }}" alt="{{ anime.get_title }}" style="width: 100%; height: 100%;">
+            {% else %}
+            <div class="placeholder">No Image</div>
+            {% endif %}
+        </div>
+        <div class="title-wrapper">
+            <p class="title" title="{{ anime.get_title }}">
+                <a href="{% url 'publication' publication_type='anime' link=anime.link %}">Аніме</a>
+            </p>
+        </div>
+    </div>
+    {% endfor %}
+{% endif %}
+    </div>
+
+{% if not publications.manga and not publications.novel and not publications.anime %}
+<h3>Немає публікацій для цього твору</h3>
+{% endif %}
+
     </section>
 </div>
 

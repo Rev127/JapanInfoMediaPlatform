@@ -2,13 +2,14 @@ from ckeditor.fields import RichTextField
 from django.db import models
 from slugify import slugify
 from django.core.exceptions import ValidationError
+from filebrowser.fields import FileBrowseField
 
 # Create your models here.
 
 class Work(models.Model):
     title = models.CharField(max_length=255)
     description = RichTextField(blank=True, null=True, verbose_name='Опис')
-    image = models.ImageField(upload_to='works/', blank=True, null=True, verbose_name='Зображення')
+    image = FileBrowseField(verbose_name='Зображення твору', max_length=255, directory='work_image/', extensions=['.jpg', '.jpeg', '.png'], blank=True, null=True)
     genre = models.ManyToManyField('Genre', related_name='works', verbose_name='Жанр')
     author = models.ForeignKey('Author', on_delete=models.CASCADE, related_name='works', verbose_name='Автор')
     link = models.CharField(max_length=255, blank=True, null=True, verbose_name='Посилання')
@@ -35,6 +36,12 @@ class Work(models.Model):
 
     def get_title(self):
         return self.title
+
+    def get_absolute_url(self):
+        return f"/work/{self.link}/"
+
+    def get_link(self):
+        return self.link
 
 class Genre(models.Model):
     name = models.CharField(max_length=50, verbose_name='Назва')
@@ -68,7 +75,7 @@ class Author(models.Model):
 
 class Publication(models.Model):
     title = models.CharField(max_length=255, verbose_name='Назва')
-    cover_image = models.ImageField(upload_to='publications/', blank=True, null=True, verbose_name='Обкладинка')
+    cover_image = FileBrowseField(verbose_name='Обкладинка', max_length=255, directory='publication_image/', extensions=['.jpg', '.jpeg', '.png'], blank=True, null=True)
     link = models.CharField(max_length=255, blank=True, null=True, verbose_name='Посилання')
     work = models.ForeignKey(Work, on_delete=models.CASCADE, related_name='%(class)s_publications', verbose_name='Твір')
     publication_unit = models.ManyToManyField('PublicationUnit', blank=True, related_name='%(class)s_publications', verbose_name='Публікаційна одиниця')
@@ -91,11 +98,13 @@ class Publication(models.Model):
     def get_work(self):
         return self.work
 
+    def get_link(self):
+        return self.link
+
     def save(self, *args, **kwargs):
         if not self.link:
             self.link = slugify(self.title, to_lower=True)
         super().save(*args, **kwargs)
-
 
 class Manga(Publication):
     artist = models.CharField(max_length=50, blank=True, null=True, verbose_name='Художник')
@@ -181,7 +190,7 @@ class Anime(Publication):
 class PublicationUnit(models.Model):
     title = models.CharField(max_length=255, verbose_name='Назва')
     description = RichTextField(blank=True, null=True, verbose_name='Опис')
-    title_image = models.ImageField(upload_to='publication_units/', blank=True, null=True, verbose_name='Зображення')
+    title_image = FileBrowseField(verbose_name='Зображення обкладинки', max_length=255, directory='publication_unit_image/', extensions=['.jpg', '.jpeg', '.png'], blank=True, null=True)
     link = models.CharField(max_length=255, blank=True, null=True, verbose_name='Посилання')
     year_of_release = models.PositiveIntegerField(default=0, blank=True, null=True, verbose_name='Рік випуску')
     number = models.PositiveIntegerField(default=0, blank=True, null=True, verbose_name='Номер')
@@ -223,9 +232,6 @@ class PublicationUnit(models.Model):
 
 # Removed the get_publication method as it references an undefined attribute.
 
-    def get_last_update(self):
-        return self.last_update
-
     def save(self, *args, **kwargs):
         if not self.link:
             self.link = slugify(self.title, to_lower=True)
@@ -251,7 +257,7 @@ class Seasons(PublicationUnit):
 
 class Characters(models.Model):
     name = models.CharField(max_length=50, verbose_name='Ім\'я')
-    image = models.ImageField(upload_to='characters/', blank=True, null=True, verbose_name='Зображення')
+    image = FileBrowseField(verbose_name='Зображення персонажа', max_length=255, directory='characters_image/', extensions=['.jpg', '.jpeg', '.png'], blank=True, null=True)
 
     def __str__(self):
         # Отримуємо всі PublicationUnit, де цей персонаж є активним
@@ -295,9 +301,15 @@ class CharacterPublication(models.Model):
     publication_type = models.CharField(max_length=50, choices=PublicationType.choices, verbose_name='Тип роботи')
 
     def clean(self):
-        # Перевірка, чи вже існує CharacterPublication з таким типом для цього персонажа
-        if CharacterPublication.objects.filter(character=self.character, publication_type=self.publication_type).exists():
-            raise ValidationError(f"CharacterPublication with type '{self.publication_type}' already exists for this character.")
+        if self.character_id and self.publication_type:
+            exists = CharacterPublication.objects.filter(
+                character=self.character,
+                publication_type=self.publication_type
+            ).exclude(pk=self.pk).exists()  # додали exclude, щоб уникати хибнопозитиву при редагуванні
+            if exists:
+                raise ValidationError(
+                    f"CharacterPublication with type '{self.publication_type}' already exists for this character."
+                )
 
     def save(self, *args, **kwargs):
         # Виклик clean перед збереженням

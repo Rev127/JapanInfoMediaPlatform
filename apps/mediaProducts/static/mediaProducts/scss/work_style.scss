@@ -1,15 +1,63 @@
+@import 'infoPlatformMainApp/static/mainapp/scss/units/variables'; // Імпорт змінних SCSS
+@import 'infoPlatformMainApp/static/mainapp/scss/units/mixins'; // Імпорт міксинів SCSS
+
 .work-header, .publication-header, .publicationunit-header{
-    display: flex;
-    gap: 20px;
+    @include flex-custom(row, flex-start, center, 20px);
 
     .work-image, .publication-image, .publicationunit-image{
         width: 300px;
         height: 400px;
-        background-color: #ccc;
+        background-color: $color-image-bg;
+
+        .placeholder {
+            color: $color-image-placeholder;
+            font-size: 14px;
+            @include flex-custom(column, center, center);
+            text-align: center;
+        }
     }
 
     .work-info, .publication-info, .publicationunit-info{
         flex: 1;
+
+        .work-title{
+            @include flex-custom(row, center, center);
+
+            .bookmark-form {
+              margin: 0;
+
+                .bookmark-button {
+                  background: none;
+                  border: none;
+                  padding: 0;
+                  margin-right: 10px; /* Відступ справа, щоб не злипалось з текстом заголовка */
+                  cursor: pointer;
+                  vertical-align: middle;
+                  @include flex-custom(row, center, center);
+                  position: relative; /* Для позиціонування псевдоелемента */
+
+                    img {
+                      width: 24px;   /* або менше, залежно від дизайну */
+                      height: 30px;
+                      filter: brightness(0) saturate(100%) invert(83%) sepia(12%) saturate(500%) hue-rotate(120deg) brightness(95%) contrast(90%); /* або при потребі змінити колір */
+                      transition: transform 0.2s ease;
+                    }
+
+                    &:hover img {
+                      transform: scale(1.1); /* Ефект при наведенні */
+                    }
+
+                    &::after {
+                        @include tooltip();
+                    }
+
+                    &:hover::after {
+                        opacity: 1;
+                        visibility: visible;
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -20,16 +68,27 @@
     margin: 10px 0;
 
     .genre {
-        background-color: #233833;
+        background-color: $color-section-bg;
         padding: 5px 10px;
         border-radius: 5px;
+        color: $color-text;
+        position: relative;
+        cursor: pointer;
+
+    &::after {
+        @include tooltip();
     }
+
+    &:hover::after {
+        opacity: 1;
+        visibility: visible;
+    }
+}
 }
 
 
-
 .description, .author {
-    background-color: #233833;
+    background-color: $color-section-bg;
 
     padding: 20px;
     border-radius: 20px;
@@ -37,20 +96,20 @@
 
     p {
         margin: 0;
+        color: $color-text;
     }
 }
 
 .comments {
-    display: flex;
-    flex-direction: column;
+    @include flex-custom(column, center, center);
     width: 100%;
 
     .comment {
-        background-color: #233833;
+        background-color: $color-section-bg;
         padding: 20px;
         border-radius: 20px;
         margin-top: 10px;
-        color: #D1FAE5;
+        color: $color-text;
         width: 100%; // або max-width: 800px;
         box-sizing: border-box;
 
@@ -73,7 +132,7 @@
         }
 
         .comment-body {
-            background-color: #1B2B27;
+            background-color: $color-card-bg;
             border-radius: 5px;
             padding: 10px;
             margin-top: 10px;
@@ -81,9 +140,47 @@
             box-sizing: border-box;
         }
 
-
         p {
             margin: 0;
+        }
+    }
+}
+
+.add-comment{
+    @include flex-custom(column, center, center);
+    gap: 10px;
+    width: 100%;
+    padding: 20px;
+
+
+    textarea {
+        background-color: #2E534A;
+        padding: 20px;
+        border-radius: 20px;
+        color: #D1FAE5;
+        width: 100%;
+        resize: none;
+        border: none;
+        box-sizing: border-box;
+
+        &::placeholder {
+            color: #0F1D1A;
+            opacity: 0.5;
+        }
+    }
+
+    button {
+        background-color: $color-element-bg;
+        color: $color-text-secondary;
+        border-radius: 20px;
+        padding: 10px 20px;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+        border: none;
+
+        &:hover {
+            background-color: #ddd;
         }
     }
 }

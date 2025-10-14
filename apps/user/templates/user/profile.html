@@ -3,75 +3,99 @@
 {% block head_custom_styles %}
 <link rel="stylesheet" href="{% static 'user/scss/profile_style.scss' %}" type="text/x-scss">
 {% endblock %}
+{% block head_custom_scripts %}
+    <script src="{% static 'user/js/user_script.js' %}"></script>
+{% endblock %}
 {% block body %}
 <div class="container">
     <!-- User Profile -->
     <div class="profile">
         <div class="avatar">
-            <!--{% if user.avatar %}-->
-            <img src="" alt="Avatar">
-            <!--{% else %}-->
+            {% if user.get_avatar %}
+            <img src="{{ user.get_avatar }}" alt="Avatar">
+            {% else %}
             <img src="/media/user_avatar/user_icon.png" alt="Avatar">
-            <!--{% endif %}-->
+            {% endif %}
         </div>
         <div class="user-info">
-            <h2></h2>
-            <p></p>
-            <form action="" method="post">
+            <h2>{{ user.username }}</h2>
+            <h3>{{ user.email }}</h3>
+            <div class="user-buttons">
+
+            <form action="{% url 'logout' %}" method="post">
                 {% csrf_token %}
-                <button class="logout-button">Log Out</button>
+                <button class="logout-button">Вийти з акаутну</button>
             </form>
+            {% if user.is_staff %}
+            <form action="/admin" method="get">
+                <button class="admin-button">Панель адміністратора</button>
+            </form>
+            {% endif %}
+            </div>
         </div>
     </div>
 
+    {% if messages %}
+        <div id="toast-message" class="toast-message">
+            {% for message in messages %}
+                <p class="{{ message.tags }}">{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+
     <!-- Update Profile Information -->
-    <form method="POST" enctype="multipart/form-data" class="update-form" action="">
+    <form method="POST" class="update-form" action="{% url 'profile' %}">
         {% csrf_token %}
 
         <!-- Username Update -->
         <div class="form-group">
-            <input type="text" name="username" placeholder="Update Username" value="">
-            <button type="submit" name="action" value="username_update">Username Update</button>
+            <input type="text" name="update_value" placeholder="Update Username" value="{{ user.username }}">
+            <button type="submit" name="action" value="username_update">Оновити ім'я користувача</button>
         </div>
-
+    </form>
+<form method="POST" class="update-form" action="{% url 'profile' %}">
+        {% csrf_token %}
         <!-- Email Update -->
         <div class="form-group">
-            <input type="email" name="email" placeholder="Update Email" value="">
-            <button type="submit" name="action" value="email_update">Email Update</button>
+            <input type="email" name="update_value" placeholder="Update Email" value="{{ user.email }}">
+            <button type="submit" name="action" value="email_update">Оновити email користувача</button>
         </div>
-
+    </form>
+<form method="POST" enctype="multipart/form-data" class="update-form" action="{% url 'profile' %}">
+        {% csrf_token %}
         <!-- Avatar Selection -->
-        <div class="form-group file-group">
-            <!-- input for file selection -->
-            <input type="file" name="avatar" accept="image/*" class="file-input">
-            <!-- button for avatar update -->
-            <button type="submit" name="action" value="avatar_update" class="file-upload-btn">Avatar Update</button>
+        <div class="file-group">
+            <!-- Hidden file input -->
+            <input type="file" name="update_value" accept="image/*" class="file-input" id="file-input">
+            <!-- Custom button -->
+            <label for="file-input" class="custom-file-button"><span id="file-name" class="file-name">Файл не вибрано</span></label>
+            <!-- Submit button -->
+            <button type="submit" name="action" value="avatar_update">Оновити аватар користувача</button>
         </div>
     </form>
 
 </div>
 <div class="container">
-    <!-- Liked Novels -->
-    <div class="liked-novels">
-        <h2>Відстежуванні роботи</h2>
-        <section class="section">
+        <h1>Відстежуванні роботи</h1>
+        <section>
             <div class="cards">
-
+                {% for work in user.get_tracking_works %}
                 <div class="card">
                     <div class="thumbnail">
-                        <!--{% if novel.image %}-->
-                        <img src="" alt="" style="width: 100%; height: 100%;">
-                        <!--{% else %}-->
+                        {% if work.get_image %}
+                        <img src="{{ work.get_image }}" alt="{{ work.get_title }}" style="width: 100%; height: 100%;">
+                        {% else %}
                         <div class="placeholder">No Image</div>
-                        <!--{% endif %}-->
+                        {% endif %}
                     </div>
-                    <div class="novel-title-wrapper">
-                        <p class="novel-title"><a href=""></a></p>
+                    <div class="title-wrapper">
+                        <p class="title"><a href="{{ work.get_absolute_url }}">{{ work.get_title }}</a></p>
                     </div>
                 </div>
+                {% endfor %}
             </div>
         </section>
-    </div>
 </div>
 
 {% endblock %}

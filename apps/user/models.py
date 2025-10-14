@@ -1,14 +1,18 @@
 from django.db import models
 from apps.mediaProducts.models import PublicationUnit, Work
 from django.contrib.auth.models import AbstractUser, Group, Permission
+from filebrowser.fields import FileBrowseField
 
 # Create your models here.
 class Profile(AbstractUser):
-    avatar = models.ImageField(upload_to='users/', blank=True, null=True, verbose_name='Аватар')
-
-    groups = models.ManyToManyField(Group, related_name="user_profiles", blank=True, verbose_name='Групи')
-    user_permissions = models.ManyToManyField(Permission, related_name="user_permissions_set", blank=True, verbose_name='Дозволи')
-    tracking_works = models.ManyToManyField(Work, verbose_name="Відстежувані твори", blank=True, related_name='tracking_works')
+    avatar = FileBrowseField(verbose_name='Аватар', max_length=255,
+                             directory='user_avatar/', extensions=['.jpg', '.jpeg', '.png'], blank=True, null=True)
+    groups = models.ManyToManyField(Group, related_name="user_profiles",
+                                    blank=True, verbose_name='Групи')
+    user_permissions = models.ManyToManyField(Permission, related_name="user_permissions_set",
+                                              blank=True, verbose_name='Дозволи')
+    tracking_works = models.ManyToManyField(Work, verbose_name="Відстежувані твори",
+                                            blank=True, related_name='tracking_works')
 
     def get_tracking_works(self):
         return self.tracking_works.all()
@@ -16,6 +20,8 @@ class Profile(AbstractUser):
     def get_avatar(self):
         return self.avatar.url if self.avatar else None
 
+    def work_is_tracked(self, work):
+        return self.tracking_works.filter(id=work.id).exists()
 
     def __str__(self):
         return self.username

@@ -6,6 +6,8 @@ from apps.user.models import Profile, Comment
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ['username', 'email', 'first_name', 'date_joined']
     search_fields = ['username', 'email', 'first_name']
+    list_filter = ['tracking_works', 'groups', 'user_permissions']
+    filter_horizontal = ('tracking_works', 'groups', 'user_permissions')
     ordering = ("-date_joined",)
 
 @admin.register(Comment)

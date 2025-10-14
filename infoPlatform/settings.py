@@ -14,6 +14,7 @@ import sys
 from pathlib import Path
 
 import dotenv
+from django.conf.global_settings import LOGIN_REDIRECT_URL
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,7 +30,7 @@ SECRET_KEY = 'django-insecure-m6yfs*329n2l8tyvxew%p^in&ny!uj#v36e8^2+7n#-fmg02j)
 DEBUG = str(os.environ.get("DEBUG", 0)) == "1"
 LOCAL = str(os.environ.get("LOCAL", 0)) == "1"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'testserver']
 
 
 # Application definition
@@ -48,7 +49,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'ckeditor_uploader',
     'mptt',
-    'compressor'
+    'compressor',
 ]
 
 MIDDLEWARE = [
@@ -112,20 +113,12 @@ else:
         }
     }
 
-if 'test' in sys.argv:
-    DATABASES['default'] = {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'test_db.sqlite3'),  # Тестова база
-        'OPTIONS': {
-            'timeout': 20,
-        }
-    }
-
-
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
 AUTH_USER_MODEL = 'user.Profile'
+LOGIN_REDIRECT_URL = 'profile'
+LOGOUT_REDIRECT_URL = '/'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -210,6 +203,10 @@ COMPRESS_FILTERS = {
 }
 HTML_MINIFY = True
 KEEP_COMMENTS_ON_MINIFYING = True
+
+COMPRESS_PRECOMPILERS = (
+    ('text/x-scss', 'django_libsass.SassCompiler'),
+)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
