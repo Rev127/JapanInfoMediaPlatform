@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-m6yfs*329n2l8tyvxew%p^in&ny!uj#v36e8^2+7n#-fmg02j)
 DEBUG = str(os.environ.get("DEBUG", 0)) == "1"
 LOCAL = str(os.environ.get("LOCAL", 0)) == "1"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'testserver']
 
 
 # Application definition
@@ -112,16 +112,6 @@ else:
             },
         }
     }
-
-if 'test' in sys.argv:
-    DATABASES['default'] = {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'test_db.sqlite3'),  # Тестова база
-        'OPTIONS': {
-            'timeout': 20,
-        }
-    }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
