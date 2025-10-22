@@ -1,0 +1,439 @@
+@import 'units/variables'; // Імпорт змінних SCSS
+@import 'units/mixins'; // Імпорт міксинів SCSS
+
+html, body {
+  margin: 0;
+  font-family: $font-main;
+  background-color: $color-bg; /* Фон загальної сторінки */
+  color: white;
+  height: 100%;
+}
+
+.wrapper {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+
+.header {
+  display: flex;
+  @include flex-custom(row, center, space-between, 0px, 10px);
+  background-color: $color-header-bg;
+
+  .jim-platform {
+    font-family: $font-main;
+    font-weight: 400;
+    font-style: bold;
+    font-size: 34px;
+    line-height: 43px;
+    color: $color-text;
+    @include reference();
+
+  }
+
+  .nav-bar {
+    display: flex;
+    gap: 20px;
+    font-size: 20px;
+    color: $color-text;
+
+    .nav-item{
+      display: flex;
+      align-items: center;
+      @include reference();
+      @include hover-underline();
+      cursor: pointer;
+    }
+  }
+
+  .search-bar {
+    position: relative; /* Для абсолютного позиціонування списку підказок */
+    @include flex-custom(row, center, center);
+    @include rounded(20px); /* Заокруглені краї */
+    margin: 20px 0;
+    overflow: visible; /* Щоб краї були рівно заокруглені */
+    background-color: $color-element-bg; /* Фон для заокруглення */
+
+    &.has-suggestions {
+    border-radius: 20px 20px 0 0; /* Забираємо заокруглення знизу */
+  }
+
+    .search-input {
+      width: 300px;
+      padding: 10px;
+      border: none;
+      outline: none;
+      background-color: $color-element-bg;
+      color: $color-text-secondary;
+      font-size: 16px;
+      border-radius: 20px 0 0 20px; /* Заокруглені краї тільки з лівого боку */
+      @include placeholder($color-placeholder); /* Плейсхолдер */
+    }
+
+
+
+    .search-button {
+      padding: 10px;
+      border: none;
+      height: 100%;
+      border-radius: 0 20px 20px 0; /* Заокруглені краї тільки з правого боку */
+      background-color: $color-element-bg;
+      background-image: url('/media/icons/search_button_image.png'); /* Вкажіть шлях до вашого зображення */
+      background-size: contain; /* Зображення адаптується до розміру кнопки */
+      background-repeat: no-repeat; /* Забороняє повторення зображення */
+      background-position: center; /* Вирівнює зображення по центру */
+      color: transparent; /* Приховує текст (опціонально) */
+      cursor: pointer;
+    }
+
+    .suggestions-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      top: 100%; /* Відстань від верхньої частини поля вводу */
+      position: absolute;
+      background: $color-element-bg;
+      width: 100%;
+      z-index: 1000;
+      border-radius: 0 0 20px 20px; /* Заокруглені краї тільки знизу */
+
+      li {
+          padding: 0px 0px 0px 10px;
+          a{
+              text-decoration: none;
+              color: $color-text-secondary;
+          }
+
+            &:hover {
+                background-color: #f0f0f0;
+                border-radius: 20px;
+            }
+        }
+    }
+  }
+
+  .auth {
+    @include flex-custom(row, center, center, 10px);
+
+    .button {
+      @include flex-custom(row, center, center, 0px, (8px 16px));
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: $color-element-bg;
+      font-family: $font-secondary;
+      font-size: 24px;
+      color: $color-text-secondary;
+      border: none;
+    }
+  }
+
+  .mini-user-info {
+    font-size: 16px;
+    @include flex-custom(row, center, center, 10px);
+    text-align: center;
+    color: $color-text;
+    @include reference();
+
+
+    .user-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 100%;
+    }
+}
+}
+
+.content {
+  flex: 1; /* Дуже важливо! */
+
+  .container {
+    width: 100%;
+    max-width: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+
+    @media (min-width: 576px) {
+        max-width: 540px;
+    }
+
+    @media (min-width: 768px) {
+        max-width: 720px;
+    }
+
+    @media (min-width: 992px) {
+        max-width: 960px;
+    }
+
+    @media (min-width: 1200px) {
+        max-width: 1140px;
+    }
+
+    @media (min-width: 1440px) {
+        max-width: 1140px;
+        padding-left: 150px;
+        padding-right: 150px;
+    }
+
+    @media (min-width: 1600px) {
+        max-width: 1320px;
+        padding-left: 150px;
+        padding-right: 150px;
+    }
+  }
+
+    h1 {
+      font-family: $font-main;
+      font-style: bold;
+      color: $color-text;
+      align-items: center;
+      text-align: center;
+    }
+
+    h2, h3, h4, h5, h6 {
+      font-family: $font-main;
+      color: $color-text;
+      align-items: center;
+    }
+
+    section {
+      @include flex-custom(column, center, space-between, 0px, 20px);
+      background-color: #233833; /* Фон для секцій */
+      border-radius: 10px; /* Заокруглені краї */
+      margin-bottom: 20px; /* Відступ між секціями */
+    }
+
+    .cards {
+        @include flex-custom(row, center, space-between, 20px);
+        flex-wrap: wrap;
+
+        .card {
+            width: 150px; /* Визначення фіксованої ширини картки */
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: $color-card-bg; /* Фон для картки */
+            cursor: pointer;
+
+
+            .thumbnail {
+                width: 100%;
+                height: 200px;
+                background-color: #d3d3d3;
+                border-radius: 4px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .placeholder {
+                color: #777;
+                font-size: 14px;
+            }
+
+            .title-wrapper {
+                display: block;
+
+                &:hover .title::after {
+                opacity: 1;
+                visibility: visible;
+            }
+
+                .title {
+                    font-size: 20px;
+                    color: #D1FAE5;
+                    font-style: bold;
+                    display: inline-block;
+                    overflow: hidden; /* Обрізає текст, якщо він виходить за межі */
+                    text-overflow: ellipsis; /* Додає три крапки (...) */
+                    white-space: nowrap; /* Запобігає переносу тексту */
+                    max-width: 100%; /* Забезпечує, щоб текст не виходив за межі */
+                    position: relative;
+
+                    a {
+                        color: inherit;
+                        text-decoration: none;
+                        }
+
+
+                }
+            }
+        }
+    }
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  padding-top: 60px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.6);
+
+  .modal-content {
+    background-color: #1B2B27;
+    margin: auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 60%;
+    max-width: 600px;
+    position: relative;
+    color: $color-text;
+
+    .description {
+      background-color: #233833; // або будь-який інший колір
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 20px;
+
+
+      .description-field {
+          background-color: #2E534A;
+          padding: 10px;
+          border-radius: 5px;
+          margin-right: 10px;
+          margin-left: 10px;
+      }
+
+      p {
+        padding: 5px;
+      }
+
+    }
+
+    .close {
+      color: $color-text;
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+
+      &:hover,
+      &:focus {
+        color: black;
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+
+    .server-news{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 20px;
+
+        .news-item {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+          align-items: flex-start;
+          margin-bottom: 20px;
+          width: 100%;
+          padding: 10px;
+          background-color: #2E534A; /* Фон для новин */
+          border-radius: 20px; /* Заокруглені краї */
+          cursor: pointer;
+
+          span {
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              max-width: 100%;
+              color: $color-text;
+
+              &::after {
+                content: '|';
+                margin-left: 10px;
+                color: #fff;
+              }
+
+              &:last-child::after {
+                content: '';
+                margin-left: 0;
+              }
+
+              &.content {
+                flex: 1;
+              }
+            }
+        }
+    }
+}
+
+
+
+.footer {
+  display: block;
+  background-color: $color-footer-bg;
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+
+  .footer-group{
+    @include flex-custom(row, center, space-between);
+
+    .footer-about_us {
+        padding-left: 50px;
+        width: 50%;
+    }
+
+    .footer-contacts {
+        padding-right: 50px;
+    }
+  }
+}
+
+
+.toast-message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #333;
+    color: #fff;
+    padding: 15px 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    z-index: 9999;
+    animation: fadeout 4s forwards;
+
+    p {
+        margin: 0;
+    }
+
+    .success {
+        color: #28a745;
+    }
+
+    .error {
+        color: #dc3545;
+    }
+
+    /* Анімація зникнення */
+    @keyframes fadeout {
+        0% { opacity: 1; }
+        80% { opacity: 1; }
+        100% { opacity: 0; display: none; }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+

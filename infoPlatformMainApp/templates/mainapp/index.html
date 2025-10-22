@@ -1,0 +1,92 @@
+{% extends 'wrapper.html' %}
+{% load static %}
+{% block body %}
+
+<div class="container">
+    <h1>Останні новини по творах</h1>
+    <section>
+        <div class="cards">
+            {% for news in work_news %}
+            <div class="card" onclick="openModal('modal_work_news-{{ forloop.counter }}')">
+                <div class="thumbnail">
+                    {% if news.get_image %}
+                    <img src="{{ news.get_image }}" style="width: 100%; height: 100%;">
+                    {% else %}
+                    <div class="placeholder">No Image</div>
+                    {% endif %}
+                </div>
+                <div class="title-wrapper">
+                    <p class="title" title="{{ news.get_title }}">{{ news.get_title }}</p>
+                </div>
+            </div>
+
+            <!-- Modal for news details -->
+            <div id="modal_work_news-{{ forloop.counter }}" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal('modal_work_news-{{ forloop.counter }}')">&times;</span>
+                    <h1>{{ news.get_title }}</h1>
+                    <div class="description">
+                        <p><strong>Дата:</strong> {{ news.get_created_at }}</p>
+                        <p><strong>Автор:</strong> {{ news.get_user.username }}</p>
+                        <p><strong>Вміст:</strong><div class="description-field">{{ news.get_content }}</div></p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+
+<div class="container">
+    <h1>Останні оновлення</h1>
+    <section>
+        <div class="cards">
+            {% for work in last_update_works %}
+            <div class="card">
+                <div class="thumbnail">
+                    {% if work.get_image %}
+                    <img src="{{ work.get_image }}" style="width: 100%; height: 100%;">
+                    {% else %}
+                    <div class="placeholder">No Image</div>
+                    {% endif %}
+                </div>
+                <div class="title-wrapper">
+                    <p class="title" title="{{ work.get_title }}"><a href="{{ work.get_absolute_url }}">{{ work.get_title }}</a></p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+
+<div class="container">
+    <h1>Серверні новини</h1>
+    <section class="server-news">
+        {% for news in server_news %}
+        <div class="news-item" onclick="openModal('modal_server_news-{{ forloop.counter }}')">
+          <span class="date">{{ news.get_created_at }}</span>
+          <span class="author">{{ news.get_user.username }}</span>
+          <span class="type">{{ news.get_news_type }}</span>
+          <span class="content">{{ news.get_content }}</span>
+        </div>
+
+        <!-- Modal for news details -->
+        <div id="modal_server_news-{{ forloop.counter }}" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('modal_server_news-{{ forloop.counter }}')">&times;</span>
+                <h1>{{ news.get_news_type }}</h1>
+                <div class="description">
+                    <p><strong>Дата:</strong> {{ news.get_created_at }}</p>
+                    <p><strong>Автор:</strong> {{ news.get_user.username }}</p>
+                    <p><strong>Повідомлення:</strong><div class="description-field">{{ news.get_content }}</div></p>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+            <p>Немає новин</p>
+        {% endfor %}
+    </section>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,139 @@
+@import 'infoPlatformMainApp/static/mainapp/scss/units/variables'; // Імпорт змінних SCSS
+@import 'infoPlatformMainApp/static/mainapp/scss/units/mixins'; // Імпорт міксинів SCSS
+
+.profile {
+    @include flex-custom(row, center, center, 20px);
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+.avatar {
+    flex-shrink: 0;
+    width: 150px;
+    height: 150px;
+    border-radius: 30%;
+    overflow: hidden;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+
+.user-info {
+    @include flex-custom(column, flex-start, center);
+    margin-left: 20px;
+    font-family: $font-main;
+
+    h2 {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+
+    p {
+        font-size: 18px;
+        margin-bottom: 20px;
+    }
+
+    .user-buttons {
+        @include flex-custom(row, center, center, 10px);
+        width: 100%;
+        margin-top: 20px; /* Відступ зверху для кнопок */
+    }
+
+    .logout-button, .admin-button {
+        padding: 10px 20px;
+        font-family: $font-secondary;
+        margin-top: 10px; /* Відступ зверху для кнопки */
+        font-size: 16px;
+        border: none;
+        background-color: $color-element-bg;
+        color: $color-text-secondary;
+        @include rounded(20px);
+        cursor: pointer;
+        width: 100%;
+
+        &:hover {
+            background-color: #ddd;
+        }
+    }
+}
+
+
+.update-form {
+    @include flex-custom(column, normal, center, 15px);
+    margin-top: 10px; /* Відступ зверху для форми */
+
+    .form-group {
+        @include flex-custom(row, center, space-between, 10px);
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="file"] {
+        width: 70%; /* Ширина поля для вводу */
+        padding: 10px;
+        border: none;
+        @include rounded(20px);
+        font-size: 14px;
+        background-color: $color-element-bg;  /* Фон для інпутів */
+    }
+
+    button {
+        padding: 10px 15px;
+        border: none;
+        background-color: $color-element-bg;
+        color: $color-text-secondary;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 14px;
+        width: 25%; /* Ширина кнопки */
+
+        &:hover {
+            background-color: #ddd;
+        }
+    }
+
+    .file-group {
+        @include flex-custom(row, center, space-between, 10px);
+        width: 100%;
+
+        .file-input {
+            display: none; /* Сховати стандартний інпут файлу */
+        }
+
+        .custom-file-button {
+            display: inline-block;
+            padding: 10px;
+            @include rounded(20px);
+            font-size: 14px;
+            width: 70%; /* Ширина поля вибору файлу */
+            color: $color-text-secondary;
+            background-color: $color-element-bg; /* Фон для інпуту файлу */
+            font-family: $font-secondary;
+            font-style: normal;
+
+            &:hover {
+                background-color: #ddd;
+            }
+        }
+
+        button {
+            border: none;
+            background-color: $color-element-bg;
+            color: $color-text-secondary;
+            @include rounded(20px);
+            cursor: pointer;
+            font-size: 14px;
+            width: 25%; /* Ширина кнопки для завантаження аватарки */
+
+            &:hover {
+                background-color: #ddd;
+            }
+        }
+    }
+}
+
+

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    {% load compress %}
+    {% compress css %}
+    <link rel="stylesheet" href="{% static 'registration/scss/registration.scss' %}" type="text/x-scss">
+    <link rel="stylesheet" href="{% static 'mainapp/scss/main_style.scss' %}" type="text/x-scss">
+    {% endcompress %}
+    <title>Вхід</title>
+</head>
+<body>
+<div class="container">
+    <form method="POST" action="{% url 'login' %}">
+        {% csrf_token %}
+        <div class="main_block">
+            <br>
+            <label for="username">Login</label>
+            <input type="username" name="username" id="username" required>
+
+            <br>
+
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" required>
+
+            <br>
+
+            {% if form.non_field_errors %}
+            <ul class="errorlist">
+                {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+
+            <button type="submit">Submit</button>
+            <p>Ще досі немаєш аккаунту? <a href="{% url 'register' %}">Зареєструйся тут!</a></p>
+
+            <br>
+        </div>
+    </form>
+</div>
+</body>
+</html>

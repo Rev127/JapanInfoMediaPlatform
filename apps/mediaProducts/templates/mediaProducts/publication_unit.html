@@ -1,0 +1,129 @@
+{% extends 'wrapper.html' %}
+{% load static %}
+{% block head_custom_styles %}
+<link rel="stylesheet" href="{% static 'mediaProducts/scss/work_style.scss' %}" type="text/x-scss">
+{% endblock %}
+{% block body %}
+
+<div class="container">
+    <div class="publicationunit-header">
+        <!-- Publication Image -->
+        <div class="publicationunit-image">
+            {% if publication_unit.get_title_image %}
+            <img src="{{ publication_unit.get_title_image }}" alt="{{ publication_unit.get_title }}" style="width: 100%; height: 100%; object-fit: cover;">
+            {% else %}
+            <div class="placeholder">Image not available</div>
+            {% endif %}
+        </div>
+
+        <!-- Publication Info -->
+        <div class="publicationunit-info">
+            <h1>{{ publication_unit.get_title }}</h1>
+            <div>
+                <h2>Рік виходу: {{ publication_unit.get_year_of_release }}</h2>
+            </div>
+            {% if type == 'volume' %}
+            <div>
+                <h2>Кількість розділів: {{ publication_unit.get_chapter_count }}</h2>
+            </div>
+            {% elif type == 'season' %}
+            <div>
+                <h2>Кількість серій: {{ publication_unit.get_episode_count }}</h2>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <h2>Опис:</h2>
+    <div class="description">
+        <p>{{ publication_unit.get_description|safe }}</p>
+    </div>
+</div>
+
+<div class="container">
+    <h1>Активні персонажі</h1>
+    <!-- Character Section -->
+    <section>
+        <div class="cards">
+            {% for character in publication_unit.get_active_characters %}
+<div class="card" onclick="openModal('modal-{{ forloop.counter }}')">
+    <div class="thumbnail">
+        {% if character.get_image %}
+        <img src="{{ character.get_image }}" alt="{{ character.get_name }}" style="width: 100%; height: 100%;">
+        {% else %}
+        <div class="placeholder">No Image</div>
+        {% endif %}
+    </div>
+    <div class="title-wrapper">
+        <p class="title" title="{{ character.get_name }}">{{ character.get_name }}</p>
+    </div>
+</div>
+
+<!-- Модальне вікно -->
+<div id="modal-{{ forloop.counter }}" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('modal-{{ forloop.counter }}')">&times;</span>
+        <h1>{{ character.get_name }}</h1>
+        {% for character_description in character.get_character_publications %}
+        <div class="description">
+            <p><strong>Тип опису:</strong> {{ character_description.get_publication_type }}</p>
+            <p><strong>Опис:</strong><div class="description-field">{{ character_description.get_description|safe }}</div></p>
+        </div>
+        {% empty %}
+            <p>Немає опису для цього персонажа</p>
+        {% endfor %}
+    </div>
+</div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+
+<div class="container">
+    <h1>Коментарі</h1>
+    <!-- Comments Section -->
+    <section>
+        {% if comments %}
+        <div class="comments">
+            {% for comment in comments %}
+            <div class="comment">
+                <div class="comment-header">
+                    <img src="{{ comment.get_user.get_avatar }}" class="comment-image">
+                    <p>{{ comment.get_user.username }}</p>
+                    <div class="comment-date">
+                        <p>{{ comment.get_created_at }}</p>
+                    </div>
+                </div>
+                <div class="comment-body">
+                    <p>{{ comment.get_content }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <h3>Немає коментарів</h3>
+        {% endif %}
+    </section>
+</div>
+{% if user.is_authenticated %}
+<div class="container">
+    <h3>Додати коментар</h3>
+    <!-- Add Comment Section -->
+    <section>
+        <form method="POST" class="add-comment" action="{% url 'publication_unit' publication_unit_type=type link=publication_unit.link %}">
+            {% csrf_token %}
+            <textarea name="comment" placeholder="Ваш коментар" required></textarea>
+            <button type="submit" name="action" value="add_comment">Додати коментар</button>
+        </form>
+    </section>
+</div>
+{% endif %}
+
+{% if messages %}
+<div id="toast-message" class="toast-message">
+    {% for message in messages %}
+    <p class="{{ message.tags }}">{{ message }}</p>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% endblock %}
