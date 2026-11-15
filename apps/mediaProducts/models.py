@@ -9,6 +9,7 @@ from filebrowser.fields import FileBrowseField
 class Work(models.Model):
     title = models.CharField(max_length=255)
     description = RichTextField(blank=True, null=True, verbose_name='Опис')
+    ml_description = RichTextField(blank=True, null=True, verbose_name='Опис для системи рекомендацій')
     image = FileBrowseField(verbose_name='Зображення твору', max_length=255, directory='work_image/', extensions=['.jpg', '.jpeg', '.png'], blank=True, null=True)
     genre = models.ManyToManyField('Genre', related_name='works', verbose_name='Жанр')
     author = models.ForeignKey('Author', on_delete=models.CASCADE, related_name='works', verbose_name='Автор')
@@ -45,6 +46,7 @@ class Work(models.Model):
 
 class Genre(models.Model):
     name = models.CharField(max_length=50, verbose_name='Назва')
+    ml_name = models.CharField(max_length=50, blank=True, null=True, verbose_name="Назва для системи рекомендацій")
     description = models.TextField(max_length=255, blank=True, null=True, verbose_name='Опис')
 
     def __str__(self):

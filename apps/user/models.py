@@ -1,3 +1,4 @@
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from apps.mediaProducts.models import PublicationUnit, Work
 from django.contrib.auth.models import AbstractUser, Group, Permission
@@ -11,7 +12,7 @@ class Profile(AbstractUser):
                                     blank=True, verbose_name='Групи')
     user_permissions = models.ManyToManyField(Permission, related_name="user_permissions_set",
                                               blank=True, verbose_name='Дозволи')
-    tracking_works = models.ManyToManyField(Work, verbose_name="Відстежувані твори",
+    tracking_works = models.ManyToManyField(Work, through="TrackedWork", verbose_name="Відстежувані твори",
                                             blank=True, related_name='tracking_works')
 
     def get_tracking_works(self):
@@ -43,3 +44,33 @@ class Comment(models.Model):
 
     def get_created_at(self):
         return self.created_at
+
+    class TrackedWork(models.Model):
+        user = models.ForeignKey(
+            Profile,
+            on_delete=models.CASCADE,
+            related_name="tracked_entries"
+        )
+
+        work = models.ForeignKey(
+            Work,
+            on_delete=models.CASCADE,
+            related_name="tracked_entries"
+        )
+
+        rating = models.PositiveSmallIntegerField(
+            null=True,
+            blank=True,
+            validators=[
+                MinValueValidator(1),
+                MaxValueValidator(10)
+            ]
+        )
+
+        class Meta:
+            constraints = [
+                models.UniqueConstraint(
+                    fields=["user", "work"],
+                    name="unique_tracked_work"
+                )
+            ]
