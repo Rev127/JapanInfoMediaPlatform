@@ -26,6 +26,9 @@
                 {% csrf_token %}
                 <button class="logout-button">Вийти з акаутну</button>
             </form>
+                <form action="/recommendations" metod="get">
+                    <button class="logout-button">Переглянути рекомендації</button>
+                </form>
             {% if user.is_staff %}
             <form action="/admin" method="get">
                 <button class="admin-button">Панель адміністратора</button>

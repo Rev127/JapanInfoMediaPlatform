@@ -29,5 +29,9 @@ urlpatterns = [
     path("", include("infoPlatformMainApp.urls")),
     path("", include("apps.mediaProducts.urls")),
     path("", include("apps.user.urls")),
+    path(
+        "recommendations/",
+        include("apps.recommendations.urls")
+    ),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
