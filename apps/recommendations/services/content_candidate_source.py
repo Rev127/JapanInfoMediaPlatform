@@ -13,13 +13,13 @@ class ContentCandidateSource(ICandidateSource):
         history = (
             self.tracked_work_model.objects
             .filter(user=user, rating__isnull=False)
-            .prefetch_related("work__genres")
+            .prefetch_related("work__genre")
         )
 
         genre_scores = defaultdict(list)
 
         for entry in history:
-            for genre in entry.work.genres.all():
+            for genre in entry.work.genre.all():
                 genre_scores[genre.pk].append(entry.rating)
 
         if not genre_scores:
@@ -43,18 +43,18 @@ class ContentCandidateSource(ICandidateSource):
 
         works = (
             self.works
-            .filter(genres__pk__in=preferred_genres)
+            .filter(genre__pk__in=preferred_genres)
             .exclude(
                 pk__in=user.tracking_works.values("pk")
             )
             .distinct()
-            .prefetch_related("genres")
+            .prefetch_related("genre")
         )
 
         candidates = []
 
         for work in works:
-            genres = list(work.genres.all())
+            genres = list(work.genre.all())
 
             # Середня відповідність жанрів
             score = sum(

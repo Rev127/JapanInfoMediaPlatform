@@ -4,13 +4,21 @@ class UserProfileBuilder:
     def __init__(self, genre_mapper, multilabel_binarizer, fill_values=0):
         self.genre_mapper = genre_mapper
         self.mlb = multilabel_binarizer
-        self.fill_value = np.array(
-            [
-                fill_values[genre]
-                for genre in self.mlb.classes_
-            ],
-            dtype=np.float32
-        )
+
+        if np.isscalar(fill_values):
+            self.fill_values = np.full(
+                len(self.mlb.classes_),
+                fill_values,
+                dtype=np.float32
+            )
+        else:
+            self.fill_values = np.array(
+                [
+                    fill_values[genre]
+                    for genre in self.mlb.classes_
+                ],
+                dtype=np.float32
+            )
 
     def build_user_profile(self, user_ratings):
         n_genres = len(self.mlb.classes_)
@@ -27,7 +35,7 @@ class UserProfileBuilder:
             rating = item["rating"]
 
             genres = self.genre_mapper.map_genres(
-                item["genres"]
+                item["genre"]
             )
 
             genre_vector = self.mlb.transform(

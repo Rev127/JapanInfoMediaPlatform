@@ -7,14 +7,17 @@ from django.db.models import prefetch_related_objects
 from apps.recommendations.interfaces.i_recommendation_engine import (
     IRecommendationEngine
 )
+from apps.recommendations.services.candidate_generator import CandidateGenerator
+from apps.recommendations.services.features_builder import FeaturesBuilder
+from apps.recommendations.services.user_profile_builder import UserProfileBuilder
 
 
 class RecommendationEngine(IRecommendationEngine):
     def __init__(
         self,
-        candidate_generator,
-        user_profile_builder,
-        features_builder,
+        candidate_generator: CandidateGenerator,
+        user_profile_builder: UserProfileBuilder,
+        features_builder: FeaturesBuilder,
         tracked_work_model,
         strategies,
         popularity_source,
@@ -44,10 +47,6 @@ class RecommendationEngine(IRecommendationEngine):
         )
 
     def _get_user_history(self, user, exclude_work_id=None):
-        """
-        Отримання оцінених користувачем творів.
-        """
-
         history = (
             self._tracked_work_model.objects
             .filter(
@@ -55,7 +54,7 @@ class RecommendationEngine(IRecommendationEngine):
                 rating__isnull=False
             )
             .select_related("work")
-            .prefetch_related("work__genres")
+            .prefetch_related("work__genre")
         )
 
         if exclude_work_id is not None:
@@ -66,15 +65,11 @@ class RecommendationEngine(IRecommendationEngine):
         return list(history)
 
     def _build_user_profile(self, history):
-        """
-        Перетворення історії на жанровий профіль.
-        """
-
         user_ratings = [
             {
                 "rating": entry.rating,
-                "genres": list(
-                    entry.work.genres.all()
+                "genre": list(
+                    entry.work.genre.all()
                 )
             }
             for entry in history
@@ -85,11 +80,6 @@ class RecommendationEngine(IRecommendationEngine):
         )
 
     def _select_strategy(self, history_size):
-        """
-        Вибір регресійної стратегії відповідно
-        до кількості оцінок користувача.
-        """
-
         for min_history, strategy in self._strategies:
             if history_size >= min_history:
                 return strategy
@@ -97,10 +87,6 @@ class RecommendationEngine(IRecommendationEngine):
         return None
 
     def _get_popular_recommendations(self, user, top_n):
-        """
-        Резервні рекомендації без ML-прогнозування.
-        """
-
         excluded_ids = set(
             user.tracking_works.values_list(
                 "pk", flat=True
@@ -128,10 +114,6 @@ class RecommendationEngine(IRecommendationEngine):
         return recommendations
 
     def predict_rating(self, user, work):
-        """
-        Прогноз оцінки конкретного твору.
-        """
-
         history = self._get_user_history(
             user,
             exclude_work_id=work.pk
@@ -144,7 +126,7 @@ class RecommendationEngine(IRecommendationEngine):
 
         user_profile = self._build_user_profile(history)
 
-        prefetch_related_objects([work], "genres")
+        prefetch_related_objects([work], "genre")
 
         features = self._features_builder.build(
             user_profile,
@@ -168,30 +150,21 @@ class RecommendationEngine(IRecommendationEngine):
         return rating
 
     def recommend(self, user, top_n=10):
-        """
-        Формування Top-N рекомендацій.
-        Повертає [(Work, predicted_rating), ...].
-        """
-
         if top_n <= 0:
             return []
 
-        # 1. Отримуємо історію користувача
         history = self._get_user_history(user)
 
-        # 2. Вибираємо регресійну стратегію
         strategy = self._select_strategy(len(history))
 
-        # 3. Якщо історії замало — популярні твори
         if strategy is None:
+            print("нема стратегії")
             return self._get_popular_recommendations(
                 user, top_n
             )
 
-        # 4. Формуємо профіль користувача
         user_profile = self._build_user_profile(history)
 
-        # 5. Отримуємо кандидатів
         candidates = self._candidate_generator.generate(
             user,
             limit=max(self._candidate_limit, top_n)
@@ -203,9 +176,8 @@ class RecommendationEngine(IRecommendationEngine):
             )
 
         candidates = list(candidates)
-        prefetch_related_objects(candidates, "genres")
+        prefetch_related_objects(candidates, "genre")
 
-        # 6. Створюємо матриці ознак
         feature_matrices = [
             self._features_builder.build(
                 user_profile,
@@ -214,13 +186,11 @@ class RecommendationEngine(IRecommendationEngine):
             for work in candidates
         ]
 
-        # 7. Об'єднуємо у спільну матрицю
         X = vstack(
             feature_matrices,
             format="csr"
         )
 
-        # 8. Пакетне прогнозування
         predictions = np.asarray(
             strategy.predict(X)
         ).ravel()
@@ -236,7 +206,6 @@ class RecommendationEngine(IRecommendationEngine):
                 "Модель повернула некоректні прогнози"
             )
 
-        # 9. Сортуємо за прогнозованою оцінкою
         ranked = sorted(
             zip(candidates, predictions),
             key=lambda pair: (
@@ -245,7 +214,6 @@ class RecommendationEngine(IRecommendationEngine):
             )
         )
 
-        # 10. Повертаємо Top-N
         return [
             (work, float(predicted_rating))
             for work, predicted_rating in ranked[:top_n]

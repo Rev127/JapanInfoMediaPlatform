@@ -2,8 +2,9 @@ import abc
 
 class IRecommendationEngine(metaclass=abc.ABCMeta):
     @abc.abstractmethod
-    def recommend(self, user, limit):
+    def recommend(self, user, limit=10):
         pass
+
     @abc.abstractmethod
-    def get_recommendation(self, user, limit):
+    def predict_rating(self, user, work):
         pass

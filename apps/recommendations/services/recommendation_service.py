@@ -1,9 +1,10 @@
 from apps.recommendations.interfaces.i_recommendation_services import IRecommendationService
+from apps.recommendations.interfaces.i_recommendation_engine import IRecommendationEngine
 
 
 class RecommendationService(IRecommendationService):
-    def __init__(self, engine):
+    def __init__(self, engine: IRecommendationEngine):
         self._engine = engine
 
-    def recommend(self, user, limit):
+    def get_recommendations(self, user, limit):
         return self._engine.recommend(user, limit)

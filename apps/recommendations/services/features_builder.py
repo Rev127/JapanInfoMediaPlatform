@@ -10,7 +10,7 @@ class FeaturesBuilder:
 
     def build(self, user_profile, works):
         genres = self.genre_mapper.map_genres(
-            works.genres.all()
+            works.genre.all()
         )
 
         item_genres = self.mlb.transform([genres])
