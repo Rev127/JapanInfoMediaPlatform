@@ -4,6 +4,9 @@ from django.shortcuts import render, redirect
 from .facade import MediaProductsViewer
 from apps.user.facade import UserViewer
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseBadRequest
+from django.views.decorators.http import require_POST
 
 # Create your views here.
 def work_view(request, link):
@@ -22,14 +25,19 @@ def work_view(request, link):
                 messages.error(request, "Work untracking failed.")
         return redirect('work', link=link)
 
+    rating_values = range(1,11)
+    user_rating = None
     publications = MediaProductsViewer.get_publications_by_work(link)
     is_tracked = False
     if request.user.is_authenticated:
         is_tracked = request.user.work_is_tracked(work)
+        user_rating = UserViewer.get_work_rating(request.user, work).get_rating()
     return render(request, 'mediaProducts/work.html', {
         'work': work,
         'publications': publications,
-        'is_tracked': is_tracked
+        'is_tracked': is_tracked,
+        'rating_values': rating_values,
+        'user_rating': user_rating,
     })
 
 def publication_view(request, publication_type, link):
@@ -70,3 +78,23 @@ def publication_unit_view(request, publication_unit_type, link):
         'publication_unit': publication_unit,
         'comments': comments
     })
+
+
+@login_required
+@require_POST
+def rate_work(request, link):
+    work = MediaProductsViewer.get_work_info(link)
+
+    try:
+        rating = int(request.POST.get("rating", ""))
+    except (ValueError, TypeError):
+        return HttpResponseBadRequest("Некоректна оцінка")
+
+    if not 1 <= rating <= 10:
+        return HttpResponseBadRequest(
+            "Оцінка повинна бути від 1 до 10"
+        )
+
+    UserViewer.set_work_rating(request.user, work, rating)
+
+    return redirect(work.get_absolute_url())

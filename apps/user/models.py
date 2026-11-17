@@ -18,6 +18,10 @@ class Profile(AbstractUser):
     def get_tracking_works(self):
         return self.tracking_works.all()
 
+    def get_tracking_work(self, work_id):
+        return self.tracking_works.get(id=work_id)
+
+
     def get_avatar(self):
         return self.avatar.url if self.avatar else None
 
@@ -45,32 +49,39 @@ class Comment(models.Model):
     def get_created_at(self):
         return self.created_at
 
-    class TrackedWork(models.Model):
-        user = models.ForeignKey(
-            Profile,
-            on_delete=models.CASCADE,
-            related_name="tracked_entries"
-        )
 
-        work = models.ForeignKey(
-            Work,
-            on_delete=models.CASCADE,
-            related_name="tracked_entries"
-        )
+class TrackedWork(models.Model):
+    user = models.ForeignKey(
+        Profile,
+        on_delete=models.CASCADE,
+        related_name="tracked_entries"
+    )
 
-        rating = models.PositiveSmallIntegerField(
-            null=True,
-            blank=True,
-            validators=[
-                MinValueValidator(1),
-                MaxValueValidator(10)
-            ]
-        )
+    work = models.ForeignKey(
+        Work,
+        on_delete=models.CASCADE,
+        related_name="tracked_entries"
+    )
 
-        class Meta:
-            constraints = [
-                models.UniqueConstraint(
-                    fields=["user", "work"],
-                    name="unique_tracked_work"
-                )
-            ]
+    rating = models.PositiveSmallIntegerField(
+        null=True,
+        blank=True,
+        validators=[
+            MinValueValidator(1),
+            MaxValueValidator(10)
+        ]
+    )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "work"],
+                name="unique_tracked_work"
+            )
+        ]
+
+    def set_rating(self, rating):
+        self.rating = rating
+
+    def get_rating(self):
+        return self.rating

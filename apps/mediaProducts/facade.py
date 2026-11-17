@@ -1,5 +1,10 @@
+from django.contrib.auth.models import User
+
 from .models import Work, Manga, Anime, Novel, Volumes, Seasons
 from django.db.models import Max
+
+from ..user.models import TrackedWork
+
 
 class MediaProductsViewer:
     @staticmethod

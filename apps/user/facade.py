@@ -1,4 +1,4 @@
-from .models import Profile, Comment
+from .models import Profile, Comment, TrackedWork
 from django.core.files.storage import default_storage
 from django.conf import settings
 import os
@@ -60,3 +60,18 @@ class UserViewer:
         comment = Comment(user=user, publication_unit=publication_unit, content=content)
         comment.save()
         return comment
+
+    @staticmethod
+    def get_work_rating(user, work):
+        if user.work_is_tracked(work):
+            return TrackedWork.objects.get(user=user, work=work)
+        return None
+
+    @staticmethod
+    def set_work_rating(user, work, rating):
+        if user.work_is_tracked(work):
+            work = TrackedWork.objects.get(user=user, work=work)
+            work.set_rating(rating)
+            work.save()
+            return True
+        return False

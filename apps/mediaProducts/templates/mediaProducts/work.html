@@ -9,6 +9,7 @@
 <div class="container">
     <div class="work-header">
         <!-- Publication Image -->
+        <div>
         <div class="work-image">
             {% if work.get_image %}
             <img src="{{ work.get_image }}" alt="{{ work.get_title }}"
@@ -17,6 +18,39 @@
             <div class="placeholder">Image not available</div>
             {% endif %}
         </div>
+                       {% if user.is_authenticated %}
+
+<form method="POST" action="{% url 'rate_work' work.get_link %}">
+    {% csrf_token %}
+
+    <fieldset class="starability-basic" style="width: 300px;">
+        <legend>Ваша оцінка:</legend>
+
+        {% for value in rating_values %}
+            <input
+                type="radio"
+                id="rating-{{ work.pk }}-{{ value }}"
+                name="rating"
+                value="{{ value }}"
+                {% if user_rating == value %}checked{% endif %}
+
+            >
+
+            <label
+                for="rating-{{ work.pk }}-{{ value }}"
+                title="{{ value }} з 10"
+            >
+                {{ value }}
+            </label>
+        {% endfor %}
+    </fieldset>
+
+    <button type="submit">
+        Зберегти оцінку
+    </button>
+</form>
+            {% endif %}
+            </div>
 
         {% if messages %}
             <div id="toast-message" class="toast-message">

@@ -10,7 +10,10 @@
         <meta name="description" content="{% spaceless %}{% block description %}{% endblock %}{% endspaceless %}">
         <link href="https://fonts.googleapis.com/css2?family=Konkhmer+Sleokchher&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Sansita+Swashed:wght@400;600;700&display=swap" rel="stylesheet">
-
+        <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/starability/2.4.0/starability-minified/starability-basic.min.css"
+>
         {% compress css %}
             <link rel="stylesheet" href="{% static 'mainapp/scss/main_style.scss' %}" type="text/x-scss">
             {# Блок призначений для внутрішніх scss стилів, які потрібно вставити в head #}
