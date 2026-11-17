@@ -1,0 +1,33 @@
+{% extends 'wrapper.html' %}
+{% load static %}
+{% block body %}
+
+<div class="container">
+    <h1>Рекомендовані для вас медіапродукти</h1>
+    {% if recommendations %}
+        <section>
+            <div class="cards">
+                {% for item in recommendations %}
+                <div class="card">
+                    <div class="thumbnail">
+                        {% if item.work.get_image %}
+                        <img src="{{ item.work.get_image }}" style="width: 100%; height: 100%;">
+                        {% else %}
+                        <div class="placeholder">No Image</div>
+                        {% endif %}
+                    </div>
+                    <div class="title-wrapper">
+                        <p class="title" title="{{ item.work.get_title }}"><a href="{{ item.work.get_absolute_url }}">{{ item.work.get_title }}</a></p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+    {% else %}
+        <p>
+            На даний момент рекомендацій немає.
+        </p>
+    {% endif %}
+</div>
+
+{% endblock %}
