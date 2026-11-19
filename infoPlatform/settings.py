@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'infoPlatformMainApp',
     'apps.mediaProducts',
     'apps.user',
-    'apps.recommendations',
+    'apps.recommendationSystem',
     'filebrowser',
     'ckeditor',
     'ckeditor_uploader',

@@ -1,4 +1,4 @@
-from apps.recommendations.interfaces.i_candidate_source import ICandidateSource
+from apps.recommendationSystem.interfaces.i_candidate_source import ICandidateSource
 
 from collections import defaultdict
 

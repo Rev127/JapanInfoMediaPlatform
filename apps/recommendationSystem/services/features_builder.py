@@ -8,7 +8,7 @@ class FeaturesBuilder:
         self.tfidf = tfidf
         self.genre_mapper = genre_mapper
 
-    def build(self, user_profile, works):
+    def build_works_feature(self, user_profile, works):
         genres = self.genre_mapper.map_genres(
             works.genre.all()
         )

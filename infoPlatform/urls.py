@@ -30,8 +30,8 @@ urlpatterns = [
     path("", include("apps.mediaProducts.urls")),
     path("", include("apps.user.urls")),
     path(
-        "recommendations/",
-        include("apps.recommendations.urls")
+        "",
+        include("apps.recommendationSystem.urls")
     ),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

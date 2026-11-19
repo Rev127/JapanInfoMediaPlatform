@@ -5,9 +5,9 @@ import numpy as np
 from scipy.sparse import csr_matrix, issparse
 from sklearn.preprocessing import MultiLabelBinarizer
 
-from apps.recommendations.services.genre_mapper import GenreMapper
-from apps.recommendations.services.user_profile_builder import UserProfileBuilder
-from apps.recommendations.services.features_builder import FeaturesBuilder
+from apps.recommendationSystem.services.genre_mapper import GenreMapper
+from apps.recommendationSystem.services.user_profile_builder import UserProfileBuilder
+from apps.recommendationSystem.services.features_builder import FeaturesBuilder
 from .helpers import genre, work
 
 

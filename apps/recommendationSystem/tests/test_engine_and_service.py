@@ -4,9 +4,9 @@ from unittest.mock import Mock, patch
 import numpy as np
 from scipy.sparse import csr_matrix
 
-import apps.recommendations.services.recommendation_engine as engine_module
-from apps.recommendations.services.recommendation_engine import RecommendationEngine
-from apps.recommendations.services.recommendation_service import RecommendationService
+import apps.recommendationSystem.services.recommendation_engine as engine_module
+from apps.recommendationSystem.services.recommendation_engine import RecommendationEngine
+from apps.recommendationSystem.services.recommendation_service import RecommendationService
 from .helpers import user, work
 
 

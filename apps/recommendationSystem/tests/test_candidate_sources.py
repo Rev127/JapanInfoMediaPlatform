@@ -1,8 +1,8 @@
 from unittest import TestCase
 from unittest.mock import Mock
 
-from apps.recommendations.services.content_candidate_source import ContentCandidateSource
-from apps.recommendations.services.collaborative_candidate_source import CollaborativeCandidateSource
+from apps.recommendationSystem.services.content_candidate_source import ContentCandidateSource
+from apps.recommendationSystem.services.collaborative_candidate_source import CollaborativeCandidateSource
 from .helpers import genre, history_entry, user, work
 
 

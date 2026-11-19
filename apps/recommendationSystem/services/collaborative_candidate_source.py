@@ -1,7 +1,7 @@
 from collections import defaultdict
 import numpy as np
 
-from apps.recommendations.interfaces.i_candidate_source import (
+from apps.recommendationSystem.interfaces.i_candidate_source import (
     ICandidateSource
 )
 

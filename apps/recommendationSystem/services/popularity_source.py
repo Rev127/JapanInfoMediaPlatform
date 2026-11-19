@@ -8,7 +8,7 @@ from django.db.models import (
     Value,
 )
 
-from apps.recommendations.interfaces.i_candidate_source import (
+from apps.recommendationSystem.interfaces.i_candidate_source import (
     ICandidateSource
 )
 

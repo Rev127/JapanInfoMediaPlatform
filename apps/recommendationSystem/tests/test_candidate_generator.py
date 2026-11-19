@@ -1,7 +1,7 @@
 from unittest import TestCase
 from unittest.mock import Mock
 
-from apps.recommendations.services.candidate_generator import CandidateGenerator
+from apps.recommendationSystem.services.candidate_generator import CandidateGenerator
 from .helpers import user, work
 
 

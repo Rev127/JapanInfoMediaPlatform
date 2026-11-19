@@ -4,12 +4,14 @@ import numpy as np
 from scipy.sparse import vstack
 from django.db.models import prefetch_related_objects
 
-from apps.recommendations.interfaces.i_recommendation_engine import (
+from apps.recommendationSystem.interfaces.i_recommendation_engine import (
     IRecommendationEngine
 )
-from apps.recommendations.services.candidate_generator import CandidateGenerator
-from apps.recommendations.services.features_builder import FeaturesBuilder
-from apps.recommendations.services.user_profile_builder import UserProfileBuilder
+from apps.recommendationSystem.services.candidate_generator import CandidateGenerator
+from apps.recommendationSystem.services.features_builder import FeaturesBuilder
+from apps.recommendationSystem.services.popularity_source import PopularityCandidateSource
+from apps.recommendationSystem.services.user_profile_builder import UserProfileBuilder
+from apps.recommendationSystem.services.strategy_elector import StrategySelector
 
 
 class RecommendationEngine(IRecommendationEngine):
@@ -19,8 +21,8 @@ class RecommendationEngine(IRecommendationEngine):
         user_profile_builder: UserProfileBuilder,
         features_builder: FeaturesBuilder,
         tracked_work_model,
-        strategies,
-        popularity_source,
+        strategy_selector: StrategySelector,
+        popularity_source: PopularityCandidateSource,
         candidate_limit=100,
     ):
         self._candidate_generator = candidate_generator
@@ -29,22 +31,7 @@ class RecommendationEngine(IRecommendationEngine):
         self._tracked_work_model = tracked_work_model
         self._popularity_source = popularity_source
         self._candidate_limit = candidate_limit
-
-        if not strategies:
-            raise ValueError(
-                "Потрібно передати хоча б одну ML-стратегію"
-            )
-
-        # [(мінімальна історія, модель), ...]
-        self._strategies = sorted(
-            strategies,
-            key=lambda item: item[0],
-            reverse=True
-        )
-
-        self._min_history = min(
-            threshold for threshold, _ in self._strategies
-        )
+        self._strategy_selector = strategy_selector
 
     def _get_user_history(self, user, exclude_work_id=None):
         history = (
@@ -79,12 +66,28 @@ class RecommendationEngine(IRecommendationEngine):
             user_ratings
         )
 
-    def _select_strategy(self, history_size):
-        for min_history, strategy in self._strategies:
-            if history_size >= min_history:
-                return strategy
+    def _build_candidates_features(self, user_profile, candidates):
+        candidates = list(candidates)
 
-        return None
+        if not candidates:
+            raise ValueError(
+                "Неможливо сформувати ознаки для порожнього списку кандидатів"
+            )
+
+        prefetch_related_objects(candidates, "genre")
+
+        feature_matrices = [
+            self._features_builder.build_works_feature(
+                user_profile,
+                work
+            )
+            for work in candidates
+        ]
+
+        return vstack(
+            feature_matrices,
+            format="csr"
+        )
 
     def _get_popular_recommendations(self, user, top_n):
         excluded_ids = set(
@@ -128,7 +131,7 @@ class RecommendationEngine(IRecommendationEngine):
 
         prefetch_related_objects([work], "genre")
 
-        features = self._features_builder.build(
+        features = self._features_builder.build_works_feature(
             user_profile,
             work
         )
@@ -155,19 +158,22 @@ class RecommendationEngine(IRecommendationEngine):
 
         history = self._get_user_history(user)
 
-        strategy = self._select_strategy(len(history))
+        strategy = self._strategy_selector.select(
+            len(history)
+        )
 
         if strategy is None:
-            print("нема стратегії")
             return self._get_popular_recommendations(
                 user, top_n
             )
 
         user_profile = self._build_user_profile(history)
 
-        candidates = self._candidate_generator.generate(
-            user,
-            limit=max(self._candidate_limit, top_n)
+        candidates = list(
+            self._candidate_generator.generate(
+                user,
+                limit=max(self._candidate_limit, top_n)
+            )
         )
 
         if not candidates:
@@ -175,20 +181,9 @@ class RecommendationEngine(IRecommendationEngine):
                 user, top_n
             )
 
-        candidates = list(candidates)
-        prefetch_related_objects(candidates, "genre")
-
-        feature_matrices = [
-            self._features_builder.build(
-                user_profile,
-                work
-            )
-            for work in candidates
-        ]
-
-        X = vstack(
-            feature_matrices,
-            format="csr"
+        X = self._build_candidates_features(
+            user_profile,
+            candidates
         )
 
         predictions = np.asarray(

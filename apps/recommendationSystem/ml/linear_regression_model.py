@@ -1,13 +1,13 @@
-from apps.recommendations.interfaces.i_regression_model import IRegressionModel
+from apps.recommendationSystem.interfaces.i_regression_model import IRegressionModel
 from django.conf import settings
 import joblib
 from pathlib import Path
 
-class GradientBoostingRecommendationModel(IRegressionModel):
+class LinearRegressionRecommendationModel(IRegressionModel):
     def __init__(self):
         model_path = (
                 Path(settings.BASE_DIR)
-                / "apps/recommendations/ml/artifacts/gradient_boosting.joblib"
+                / "apps/recommendationSystem/ml/artifacts/linear_regression.joblib"
         )
 
         if not model_path.is_file():
